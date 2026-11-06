@@ -1,0 +1,163 @@
+// Data publik: dipakai frontend (visual + UI) dan backend (validasi agentId).
+// System prompt ada di server/prompts.js (tidak ikut ke browser).
+
+export const SKIN = ['#f3d2b3', '#e3b48a', '#c98f62', '#a97047', '#8a5a38'];
+
+export const DIVISIONS = [
+  { id: 'laravel', name: 'Laravel', short: 'Laravel', color: '#ff2d20', row: 0, col: 0 },
+  { id: 'analyst', name: 'Project Analyst', short: 'Analyst', color: '#4f7cff', row: 0, col: 1 },
+  { id: 'js', name: 'JavaScript Web', short: 'JS Web', color: '#f7b731', row: 0, col: 2 },
+  { id: 'mobile', name: 'Mobile Apps', short: 'Mobile', color: '#2fbf71', row: 1, col: 0 },
+  { id: 'bizdata', name: 'Bisnis & Data', short: 'Biz & Data', color: '#14b8a6', row: 1, col: 1 },
+  { id: 'notulen', name: 'Notulen & Dokumen', short: 'Notulen', color: '#8b5cf6', row: 1, col: 2 },
+  { id: 'academic', name: 'Akademisi & Riset', short: 'Akademik', color: '#6366f1', row: 2, col: 1 },
+];
+
+// look: skin = index SKIN, hair = warna, style = short | long | bun, glasses, hijab = warna
+const A = (id, division, name, gender, role, focus, look, quick, leader = false, skills = []) => ({
+  id, division, name, gender, role, focus, look, quick, leader, skills,
+});
+
+export const AGENTS = [
+  // ---------- Laravel ----------
+  A('bayu', 'laravel', 'Bayu Firmansyah', 'M', 'Laravel Lead', 'arsitektur Laravel, review kode, pola desain, optimasi query, keputusan teknis',
+    { skin: 2, hair: '#1c1c1c', style: 'short', glasses: true },
+    ['Review arsitektur Laravel gue', 'Optimasi query N+1', 'Pilih pattern Eloquent yang benar'], true,
+    ['Clean Architecture', 'N+1 Query Detection', 'Repository Pattern', 'Security Review']),
+  A('citra', 'laravel', 'Citra Lestari', 'F', 'Backend & API', 'REST API, autentikasi (Sanctum/Passport), Eloquent, middleware, validasi',
+    { skin: 1, hair: '#000000', style: 'long', hijab: '#ffd9a8' },
+    ['Buat REST API CRUD Laravel', 'Setup autentikasi Sanctum', 'Validasi request yang benar'], false,
+    ['REST API Standards', 'Sanctum Auth', 'Eloquent Optimization', 'Request Validation']),
+  A('arief', 'laravel', 'Arief Setiawan', 'M', 'Database & Queue', 'migrasi, seeder, relasi Eloquent, job & queue, scheduler, transaksi DB',
+    { skin: 3, hair: '#2b2118', style: 'short' },
+    ['Desain schema database', 'Setup queue dan job Laravel', 'Atasi deadlock transaksi'], false,
+    ['Schema Migration', 'Queue & Workers', 'DB Transactions', 'Deadlock Resolver']),
+  A('siti', 'laravel', 'Siti Nurhaliza', 'F', 'Livewire & Blade', 'Livewire, Blade components, Filament, Inertia, form & state',
+    { skin: 1, hair: '#2b1d16', style: 'long', hijab: '#e8d5f2' },
+    ['Component Livewire untuk form', 'Layout Blade yang rapi', 'Filament resource custom'], false,
+    ['Livewire Components', 'Blade Architecture', 'Filament Resource', 'Form State Management']),
+
+  // ---------- Project Analyst & Modeling ----------
+  A('dita', 'analyst', 'Dita Anggraini', 'F', 'Lead Analyst', 'PRD end-to-end, scope, prioritas, komunikasi stakeholder, review dokumen',
+    { skin: 0, hair: '#3a2417', style: 'long', glasses: true },
+    ['Buat PRD dari ide ini', 'Prioritaskan fitur MVP', 'Review PRD gue'], true,
+    ['PRD End-to-End', 'MVP Prioritization', 'Scope Management', 'Stakeholder Alignment']),
+  A('gilang', 'analyst', 'Gilang Ramadhan', 'M', 'Activity Diagram Specialist', 'UML Activity Diagram, swimlane antar aktor, decision & merge, fork & join, workflow bisnis, sintaks Mermaid/PlantUML',
+    { skin: 2, hair: '#1c1c1c', style: 'short' },
+    ['Rancang Activity Diagram checkout', 'Buat alur swimlane antar aktor & sistem', 'Validasi decision node & exception flow'], false,
+    ['Activity Diagram (UML)', 'Swimlane Workflow', 'Mermaid & PlantUML', 'Business Process Modeling']),
+  A('fauzan', 'analyst', 'Fauzan Alamsyah', 'M', 'DFD & Process Modeler', 'Data Flow Diagram (Context Diagram Level 0, DFD Level 1 & 2), kamus data, spesifikasi proses (P-Spec), entitas eksternal & data store',
+    { skin: 3, hair: '#2b2118', style: 'short', glasses: true },
+    ['Buat DFD Level 0 Context Diagram', 'Breakdown DFD Level 1 & 2', 'Susun Kamus Data (Data Dictionary)'], false,
+    ['Context Diagram (Level 0)', 'DFD Level 1 & Level 2', 'Data Dictionary', 'Process Specification (P-Spec)']),
+  A('tari', 'analyst', 'Lestari Handayani', 'F', 'ERD & Data Architect', 'Entity Relationship Diagram (ERD), Crow\'s Foot & Chen, normalisasi database (1NF-3NF), kardinalitas relasi, foreign key & skema relasional',
+    { skin: 1, hair: '#1c1c1c', style: 'long', hijab: '#cfe0ff' },
+    ['Rancang ERD sistem ini', 'Normalisasi tabel database ke 3NF', 'Tentukan kardinalitas dan foreign key'], false,
+    ['ERD (Crow’s Foot & Chen)', 'Database Normalization (1NF-3NF)', 'Relational Schema Design', 'Foreign Key & Cardinality']),
+  A('viona', 'analyst', 'Viona Maharani', 'F', 'Agentic AI & Prompt Engineer', 'enterprise system prompting, multi-agent AI framework, tool & function calling schema, dynamic context management, guardrails & ReAct loops',
+    { skin: 0, hair: '#3a2417', style: 'long', glasses: true },
+    ['Rancang system prompt agentic AI', 'Desain function calling schema', 'Susun guardrails & multi-agent workflow'], false,
+    ['Agentic Architecture & Workflow', 'Production System Prompting', 'Tool & Function Calling Schema', 'Guardrails & ReAct Framework']),
+  A('raka', 'analyst', 'Raka Wijaya', 'M', 'Requirement Analyst', 'elicitasi kebutuhan, user story, acceptance criteria, gap analysis',
+    { skin: 2, hair: '#1c1c1c', style: 'short' },
+    ['Tulis user story + acceptance criteria', 'Gali kebutuhan dari deskripsi klien', 'Buat daftar requirement'], false,
+    ['User Story Writing', 'Gherkin Acceptance Criteria', 'Gap Analysis', 'Requirement Elicitation']),
+  A('nadia', 'analyst', 'Nadia Safitri', 'F', 'UX & Flow', 'user flow, wireframe, sitemap, use case, journey mapping',
+    { skin: 1, hair: '#2b1d16', style: 'long' },
+    ['Buat user flow untuk fitur ini', 'Susun use case diagram', 'Deskripsi wireframe halaman'], false,
+    ['User Flow Mapping', 'Wireframe Specs', 'Use Case Modeling', 'Sitemap Design']),
+
+  // ---------- JavaScript Web (Enterprise / Mid) ----------
+  A('fajar', 'js', 'Fajar Nugroho', 'M', 'JS Tech Lead', 'arsitektur frontend, React/Vue/Next, review kode, keputusan teknis',
+    { skin: 2, hair: '#1c1c1c', style: 'short', glasses: true },
+    ['Review struktur frontend gue', 'Pilih React atau Vue', 'Arsitektur Next.js enterprise'], true,
+    ['Frontend Architecture', 'Next.js Enterprise', 'State Management Strategy', 'Tech Stack Evaluation']),
+  A('laras', 'js', 'Laras Ayuningtyas', 'F', 'React Developer', 'React, hooks, state management, Next.js, SSR/SSG, komponen',
+    { skin: 0, hair: '#3a2417', style: 'long' },
+    ['Component React untuk form', 'Optimasi re-render hooks', 'Setup Next.js App Router'], false,
+    ['React Hooks Optimization', 'Next.js App Router', 'Re-render Prevention', 'Component Design']),
+  A('andi', 'js', 'Andi Kurniawan', 'M', 'Vue Developer', 'Vue 3, Composition API, Pinia, Nuxt, komponen, reactivity',
+    { skin: 3, hair: '#1c1c1c', style: 'short' },
+    ['Component Vue 3 Composition API', 'State management Pinia', 'Setup Nuxt untuk dashboard'], false,
+    ['Vue 3 Composition API', 'Pinia State', 'Nuxt 3 Dashboard', 'Reactivity Optimization']),
+  A('maya', 'js', 'Maya Anggraini', 'F', 'Node & API Integration', 'Node.js, Express/Nest, REST/GraphQL, integrasi API, auth frontend',
+    { skin: 1, hair: '#000000', style: 'long', hijab: '#cfe8d6' },
+    ['API layer di Node.js', 'Integrasi REST ke frontend', 'Setup NestJS service'], false,
+    ['Node.js API Layer', 'Express/NestJS', 'GraphQL/REST Integration', 'Frontend Auth Flow']),
+
+  // ---------- Mobile Apps (Flutter) ----------
+  A('hendra', 'mobile', 'Hendra Gunawan', 'M', 'Flutter Lead', 'arsitektur Flutter, state management, review kode, keputusan teknis',
+    { skin: 2, hair: '#222222', style: 'short', glasses: true },
+    ['Review arsitektur Flutter gue', 'Pilih state management', 'Struktur project Flutter yang rapi'], true,
+    ['Flutter Clean Architecture', 'Riverpod / Bloc Decision', 'Performance Profiling', 'Multiplatform Engine']),
+  A('dewi', 'mobile', 'Dewi Kartika', 'F', 'Flutter UI & Widget', 'widget, layout responsif, animasi, styling, aset & font',
+    { skin: 0, hair: '#2c1e13', style: 'long' },
+    ['Buat custom widget Flutter', 'Animasi hero & implicit', 'Layout responsive tablet & HP'], false,
+    ['Custom Widget Design', 'Hero Animations', 'Responsive Screen Layout', 'Design System Flutter']),
+  A('yoga', 'mobile', 'Yoga Pratama', 'M', 'State & Offline Data', 'Riverpod, Bloc, SQLite (Drift), Hive, sinkronisasi offline, caching',
+    { skin: 3, hair: '#1c1c1c', style: 'short' },
+    ['Setup Riverpod dengan state notifier', 'Database lokal SQLite dengan Drift', 'Fitur offline-first sync'], false,
+    ['Riverpod State Management', 'Drift SQLite Database', 'Offline-First Sync', 'Cache Invalidation']),
+  A('putri', 'mobile', 'Putri Maharani', 'F', 'QA & Release', 'unit test, widget test, integrasi, CI/CD, build iOS/Android, crashlytics',
+    { skin: 1, hair: '#202020', style: 'long', hijab: '#ffe0d9' },
+    ['Tulis unit test Flutter', 'Setup pipeline CI/CD GitHub Actions', 'Checklist rilis Play Store & App Store'], false,
+    ['Widget & Unit Testing', 'CI/CD GitHub Actions', 'Play Store & App Store Release', 'Crashlytics Monitoring']),
+
+  // ---------- Bisnis & Data ----------
+  A('rizky', 'bizdata', 'Rizky Ramadhan', 'M', 'Lead Business & Data', 'model bisnis, valuasi fitur, metrik produk, data insight, review analisis',
+    { skin: 2, hair: '#1c1c1c', style: 'short', glasses: true },
+    ['Review model bisnis aplikasi ini', 'Bantu tentukan metrik kesuksesan', 'Evaluasi potensi revenue produk'], true,
+    ['Unit Economics & Revenue', 'Product Success Metrics', 'Data Strategy', 'Executive Synthesis']),
+  A('kirana', 'bizdata', 'Kirana Dewanti', 'F', 'Data Analyst', 'analisis data, SQL, dashboard, visualisasi, metrik retensi & funnel',
+    { skin: 1, hair: '#2b1d16', style: 'long' },
+    ['Query SQL untuk cohort retention', 'Desain dashboard metrik bisnis', 'Analisis funnel konversi pengguna'], false,
+    ['Advanced SQL Analytics', 'Cohort & Retention Analysis', 'Funnel Optimization', 'Dashboard Design']),
+  A('eko', 'bizdata', 'Eko Saputra', 'M', 'Data Engineer', 'pipeline ETL, data warehouse, star schema, migrasi data, integrasi API',
+    { skin: 4, hair: '#101010', style: 'short', glasses: true },
+    ['Desain pipeline ETL', 'Integrasi data dari API', 'Skema data warehouse'], false,
+    ['ETL/ELT Pipeline', 'Star Schema Warehouse', 'Data Cleansing', 'API Data Ingestion']),
+  A('melati', 'bizdata', 'Melati Handayani', 'F', 'Market & Competitor', 'riset pasar, analisis kompetitor, segmentasi, positioning',
+    { skin: 0, hair: '#000000', style: 'long', hijab: '#d9e2f2' },
+    ['Analisis kompetitor', 'Riset pasar produk ini', 'Segmentasi pelanggan'], false,
+    ['Competitor Landscape', 'Market Research', 'Customer Segmentation', 'Positioning Analysis']),
+
+  // ---------- Notulen & Dokumen (DocOps & Export Orchestrator) ----------
+  A('bagas', 'notulen', 'Bagas Pratama', 'M', 'Notulen & Orchestrator Lead', 'orkestrasi rapat lintas divisi, notulensi rapat, rangkuman eksekutif, action items, penyusunan agenda & hasil kerja tim',
+    { skin: 2, hair: '#1a1a1a', style: 'short', glasses: true },
+    ['Rangkum hasil diskusi tim jadi notulensi rapat', 'Buat action items dan pembagian tugas', 'Susun draft laporan eksekutif lengkap'], true,
+    ['Notulensi Rapat Resmi', 'Action Items Matrix', 'Executive Summary', 'Orkestrasi Lintas Divisi']),
+  A('dian', 'notulen', 'Dian Kusuma', 'F', 'Word & Report Specialist', 'penyusunan draft dokumen Word (.docx), proposal bisnis, format laporan resmi, SOP, PRD, struktur bab dan heading rapi',
+    { skin: 1, hair: '#2b1d16', style: 'long', hijab: '#e0e7ff' },
+    ['Format dokumen ini jadi struktur Word rapi', 'Buat template proposal / SOP lengkap', 'Susun laporan akhir berbasis heading'], false,
+    ['Format Word (.doc)', 'Struktur Heading Semantik', 'Proposal Bisnis', 'SOP Standarisasi']),
+  A('ferry', 'notulen', 'Ferry Hidayat', 'M', 'Excel & Spreadsheet Specialist', 'tabel data Excel/CSV, perancangan formula, matriks perbandingan, estimasi anggaran biaya (RAB), jadwal timeline Gantt',
+    { skin: 3, hair: '#1c1c1c', style: 'short' },
+    ['Buat tabel Excel breakdown biaya (RAB)', 'Susun matriks perbandingan fitur', 'Buat tabel timeline pengerjaan project'], false,
+    ['Spreadsheet Excel (.csv)', 'RAB Anggaran Proyek', 'Gantt Timeline Matrix', 'Formula Kalkulasi']),
+  A('rina', 'notulen', 'Rina Amalia', 'F', 'PDF & Export Specialist', 'penataan dokumen PDF siap cetak, executive brief, slide outline presentasi, standarisasi tipografi & checklist dokumen',
+    { skin: 0, hair: '#3a2417', style: 'bun', glasses: true },
+    ['Rapikan dokumen ini agar siap cetak ke PDF', 'Buat outline presentasi slide executive', 'Checklist kelengkapan dokumen ekspor'], false,
+    ['PDF Siap Cetak', 'Executive One-Pager', 'Tipografi & Layout', 'Checklist Pra-Cetak']),
+
+  // ---------- Akademisi & Riset (Skripsi & Semester Akhir) ----------
+  A('bambang', 'academic', 'Prof. Bambang Sudiro, Ph.D.', 'M', 'Dosen Pembimbing (Lead)', 'bimbingan skripsi Bab 1 s.d. Bab 5, rumusan & batasan masalah, kerangka berpikir, logika ilmiah, review kritis dan kesiapan sidang',
+    { skin: 2, hair: '#666666', style: 'short', glasses: true },
+    ['Review Bab 1 skripsi saya (latar belakang & masalah)', 'Uji apakah rumusan masalah saya sudah tajam', 'Simulasi pertanyaan dosen penguji sidang skripsi'], true,
+    ['Uji Novelty & Research Gap', 'Review Bab 1-5 Skripsi', 'Koherensi Benang Merah', 'Simulasi Sidang Skripsi']),
+  A('ira', 'academic', 'Dr. Ira Kusumawati, M.Kom.', 'F', 'Kepala Program Studi (Kaprodi)', 'validasi kelayakan judul skripsi, linearitas topik kurikulum, etika penelitian, syarat kelulusan & sidang, kesiapan sempro',
+    { skin: 1, hair: '#222222', style: 'long', hijab: '#fed7aa', glasses: true },
+    ['Evaluasi kelayakan 3 usulan judul skripsi saya', 'Apakah topik ini linier dan layak disidangkan?', 'Checklist syarat seminar proposal & sidang skripsi'], false,
+    ['Validasi Kelayakan Judul', 'Linearitas Kurikulum', 'Etika Penelitian', 'Checklist Sempro & Sidang']),
+  A('anindya', 'academic', 'Anindya Putri, M.A.', 'F', 'Editor Literatur & Jurnal', 'tinjauan pustaka (literature review), sitasi baku (APA/IEEE/Harvard), rujukan jurnal Scopus/SINTA, parafrase anti-plagiasi (Turnitin)',
+    { skin: 0, hair: '#3a2417', style: 'long', glasses: true },
+    ['Susun state-of-the-art literature review', 'Format daftar pustaka style APA/IEEE', 'Parafrase paragraf ini agar lolos Turnitin'], false,
+    ['Sitasi APA 7th & IEEE', 'Literature Review Matrix', 'Parafrase Anti-Turnitin', 'Jurnal Scopus/SINTA']),
+  A('dimas', 'academic', 'Dimas Wicaksono, M.Stat.', 'M', 'Penulisan Akademik & Olah Data', 'tata bahasa baku akademik (PUEBI/EYD), metodologi riset (kuantitatif/kualitatif/R&D), analisis statistik, interpretasi hasil uji data',
+    { skin: 3, hair: '#1a1a1a', style: 'short', glasses: false },
+    ['Tentukan metodologi penelitian yang tepat untuk judul ini', 'Bantu interpretasi hasil uji statistik saya', 'Koreksi tata bahasa akademis (PUEBI/EYD) paragraf ini'], false,
+    ['Metodologi Kuantitatif/Kualitatif', 'Uji Validitas & Reliabilitas', 'Interpretasi Statistik', 'Audit Tata Bahasa PUEBI']),
+];
+
+export const agentById = (id) => AGENTS.find((a) => a.id === id);
+export const divisionById = (id) => DIVISIONS.find((d) => d.id === id);
+export const agentsOf = (divisionId) => AGENTS.filter((a) => a.division === divisionId);

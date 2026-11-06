@@ -1,0 +1,14 @@
+# ---- 9Router AI Gateway Configuration ----
+# Masukkan API Key Gateway dari 9Router di bawah ini (jika ada):
+NINEROUTER_API_KEY=
+NINEROUTER_BASE_URL=
+
+# Ganti 'my-combo' dengan nama combo yang sudah Anda buat di 9Router
+MODEL_LEADER=9router:my-combo
+MODEL_TEAM=9router: my-combo
+
+ACCESS_CODE=
+PORT=3001
+MAX_TOKENS=8000
+RATE_PER_MINUTE=30
+DAILY_MAX_REQUESTS=1000

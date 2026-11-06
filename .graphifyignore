@@ -1,0 +1,10 @@
+# Graphify ignore patterns
+node_modules/
+*.log
+.env
+.env.*
+graphify-out/
+dist/
+build/
+*.min.js
+*.bundle.js
