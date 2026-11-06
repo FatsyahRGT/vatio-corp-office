@@ -49,13 +49,13 @@ export async function fetchConfig() {
 
 // Mengirim riwayat + pesan baru. Memanggil onText(potongan) saat streaming.
 // Melempar Error dengan .code === 401 bila kode akses salah.
-export async function streamChat(agentId, messages, { onText, signal }) {
+export async function streamChat(agentId, messages, { onText, signal, participantIds }) {
   let res;
   try {
     res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-access-code': getCode() },
-      body: JSON.stringify({ agentId, messages }),
+      body: JSON.stringify({ agentId, messages, participantIds }),
       signal,
     });
   } catch (e) {

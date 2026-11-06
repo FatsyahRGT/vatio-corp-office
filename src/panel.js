@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import { AGENTS, DIVISIONS, agentById, agentsOf, divisionById } from '../shared/roster.js';
+import { AGENTS, DIVISIONS, agentById, agentsOf, divisionById, allLeaders } from '../shared/roster.js';
 import { renderMarkdown } from './md.js';
 import { getHistory, setHistory, clearHistory, clearAllHistory, streamChat } from './chat.js';
 
@@ -84,12 +84,90 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     attachBtn: $('btn-attach'),
     fileInput: $('file-input'),
     attachmentPreview: $('attachment-preview'),
+    topbarMeeting: $('btn-topbar-meeting'),
+    openMeeting: $('btn-open-meeting'),
+    meetingCount: $('meeting-participant-count'),
+    meetingBar: $('meeting-bar'),
+    meetingList: $('meeting-participants-list'),
+    selectAddMember: $('select-add-member'),
+    clearMeetingMembers: $('btn-clear-meeting-participants'),
+    meetingMembersTitle: $('meeting-members-title'),
   };
 
   let currentId = null;
   let isExpanded = false;
   let pendingAttachments = [];
   const live = new Map(); // agentId -> { text, el, abort }
+
+  const MEETING_STORAGE_KEY = 'kantorai.meeting.participants.v1';
+
+  function getMeetingParticipants() {
+    try {
+      const raw = localStorage.getItem(MEETING_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const valid = parsed.filter((id) => AGENTS.some((a) => a.id === id));
+          if (valid.length > 0) return valid;
+        }
+      }
+    } catch {}
+    return allLeaders().map((a) => a.id);
+  }
+
+  function saveMeetingParticipants(list) {
+    try {
+      localStorage.setItem(MEETING_STORAGE_KEY, JSON.stringify(list));
+    } catch {}
+  }
+
+  let meetingParticipants = getMeetingParticipants();
+
+  function renderMeetingParticipants() {
+    if (!els.meetingList) return;
+    const count = meetingParticipants.length;
+    if (els.meetingCount) els.meetingCount.textContent = `${count} Anggota Aktif`;
+    if (els.meetingMembersTitle) els.meetingMembersTitle.innerHTML = `<strong>Anggota di Ruangan (${count}):</strong>`;
+
+    els.meetingList.innerHTML = '';
+    if (count === 0) {
+      els.meetingList.innerHTML = '<div style="font-size:12.5px; color:#ef4444; padding:4px 0;">Belum ada anggota di ruang rapat. Silakan pilih preset di atas atau tambah anggota lewat dropdown.</div>';
+    } else {
+      meetingParticipants.forEach((id) => {
+        const agent = agentById(id);
+        if (!agent) return;
+        const div = divisionById(agent.division);
+        const chip = document.createElement('div');
+        chip.className = 'meeting-chip';
+        chip.style.setProperty('--c', div.color);
+        chip.innerHTML = `
+          <span class="meeting-chip-avatar">${initials(agent.name)}</span>
+          <span class="meeting-chip-name">${agent.name.split(' ')[0]} <small>(${div.short || div.name})</small></span>
+          <button type="button" class="meeting-chip-kick" data-id="${agent.id}" title="Keluarkan ${agent.name} dari rapat">✕</button>
+        `;
+        els.meetingList.appendChild(chip);
+      });
+    }
+
+    if (els.selectAddMember) {
+      els.selectAddMember.innerHTML = '<option value="">+ Tambah Anggota ke Ruangan...</option>';
+      const available = AGENTS.filter((a) => !meetingParticipants.includes(a.id));
+      DIVISIONS.forEach((div) => {
+        const inDiv = available.filter((a) => a.division === div.id);
+        if (inDiv.length > 0) {
+          const grp = document.createElement('optgroup');
+          grp.label = div.name;
+          inDiv.forEach((a) => {
+            const opt = document.createElement('option');
+            opt.value = a.id;
+            opt.textContent = `${a.name} (${a.role})`;
+            grp.appendChild(opt);
+          });
+          els.selectAddMember.appendChild(grp);
+        }
+      });
+    }
+  }
 
   const scrollDown = (force = false) => {
     const m = els.messages;
@@ -269,6 +347,33 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     scrollDown();
   }
 
+  function renderEmptyMeeting() {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.innerHTML = `
+      <b>Ruang Rapat Bersama Pak Fatsyah 👔</b>
+      <div class="empty-role">Forum Diskusi & Kolaborasi Multi-Agen Lintas Divisi</div>
+      <div style="font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin-top: 10px; max-width: 520px; margin-inline: auto;">
+        Selamat datang di ruang rapat virtual, Pak Fatsyah! Gunakan preset atau tambah/kick anggota di atas untuk menentukan fokus rapat (misal: <em>Semua Lead</em> untuk rekomendasi strategis, atau <em>Divisi Analis</em> untuk pemodelan). Setiap anggota aktif akan memberikan tanggapan secara berurutan sesuai keahliannya.
+      </div>
+    `;
+    els.messages.appendChild(e);
+    els.quick.innerHTML = '';
+    const quicks = [
+      'Minta rekomendasi dan strategi prioritas dari tiap lead untuk proyek kita',
+      'Evaluasi kesiapan timeline, arsitektur, dan mitigasi risiko teknis',
+      'Bagaimana rekomendasi pembagian tugas antar divisi minggu ini?',
+    ];
+    for (const q of quicks) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'q';
+      btn.textContent = q;
+      btn.addEventListener('click', () => submit(q));
+      els.quick.appendChild(btn);
+    }
+  }
+
   function renderEmpty(agent) {
     const first = agent.name.split(' ')[0];
     const e = document.createElement('div');
@@ -288,7 +393,48 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   }
 
   function render(agentId) {
+    if (agentId === 'meeting') {
+      document.body.style.setProperty('--c', '#6366f1');
+      els.avatar.style.setProperty('--c', '#6366f1');
+      els.avatar.textContent = '👥';
+      els.name.textContent = 'Ruang Rapat Bersama Pak Fatsyah';
+      els.role.textContent = 'Forum Kolaborasi & Diskusi Multi-Agen';
+      if (els.meetingBar) els.meetingBar.hidden = false;
+      renderMeetingParticipants();
+
+      if (els.agentList) {
+        els.agentList.querySelectorAll('.agent-item').forEach((el) => el.classList.remove('active'));
+      }
+      if (els.openMeeting) els.openMeeting.classList.add('active');
+
+      els.mates.innerHTML = '';
+      els.messages.innerHTML = '';
+      els.quick.innerHTML = '';
+      const history = getHistory('meeting');
+      const l = live.get('meeting');
+      if (!history.length && !l) renderEmptyMeeting();
+      for (const m of history) {
+        els.messages.appendChild(
+          m.role === 'user'
+            ? bubble('user', '', { text: m.rawText || m.content, attachments: m.attachments })
+            : bubble('assistant', renderMarkdown(m.content))
+        );
+      }
+      if (l) {
+        l.el = bubble('assistant', typingHtml);
+        els.messages.appendChild(l.el);
+        paint(l);
+      }
+      scrollDown(true);
+      syncSend();
+      return;
+    }
+
+    if (els.meetingBar) els.meetingBar.hidden = true;
+    if (els.openMeeting) els.openMeeting.classList.remove('active');
+
     const agent = agentById(agentId);
+    if (!agent) return;
     const div = divisionById(agent.division);
     document.body.style.setProperty('--c', div.color);
     els.avatar.style.setProperty('--c', div.color);
@@ -341,16 +487,27 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     const hasText = Boolean(els.input.value.trim());
     const hasAtt = pendingAttachments.length > 0;
     els.send.disabled = busy || (!hasText && !hasAtt);
-    const curAgent = currentId ? agentById(currentId) : null;
-    els.input.placeholder = busy
-      ? `${curAgent ? curAgent.name.split(' ')[0] : 'Karyawan'} lagi ngetik…`
-      : 'Tulis pesan atau lampirkan file (Enter kirim)…';
+    if (currentId === 'meeting') {
+      els.input.placeholder = busy
+        ? 'Anggota rapat sedang menyusun tanggapan…'
+        : 'Sampaikan agenda/arahan untuk forum rapat (Enter kirim)…';
+    } else {
+      const curAgent = currentId ? agentById(currentId) : null;
+      els.input.placeholder = busy
+        ? `${curAgent ? curAgent.name.split(' ')[0] : 'Karyawan'} lagi ngetik…`
+        : 'Tulis pesan atau lampirkan file (Enter kirim)…';
+    }
   }
 
   async function submit(text) {
     const id = currentId;
     text = (text || '').trim();
     if (!id || (!text && pendingAttachments.length === 0) || live.has(id)) return;
+
+    if (id === 'meeting' && meetingParticipants.length === 0) {
+      alert('Silakan pilih minimal 1 anggota rapat di bilah atas sebelum mengirim pesan.');
+      return;
+    }
 
     const attachmentsToSend = [...pendingAttachments];
     pendingAttachments = [];
@@ -398,12 +555,17 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     l.el = bubble('assistant', typingHtml);
     els.messages.appendChild(l.el);
     scrollDown(true);
-    onStatus(id, 'working');
+    if (id !== 'meeting') {
+      onStatus(id, 'working');
+    } else {
+      meetingParticipants.forEach((pid) => onStatus(pid, 'working'));
+    }
     syncSend();
 
     try {
       const full = await streamChat(id, sent, {
         signal: l.abort.signal,
+        participantIds: id === 'meeting' ? meetingParticipants : undefined,
         onText: (_t, all) => {
           l.text = all;
           if (!l.raf) {
@@ -417,10 +579,18 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       setHistory(id, [...sent, { role: 'assistant', content: full }]);
       live.delete(id);
       if (l.el && currentId === id) l.el.querySelector('.bubble').innerHTML = renderMarkdown(full);
-      onStatus(id, 'done');
+      if (id !== 'meeting') {
+        onStatus(id, 'done');
+      } else {
+        meetingParticipants.forEach((pid) => onStatus(pid, 'done'));
+      }
     } catch (err) {
       live.delete(id);
-      onStatus(id, 'idle');
+      if (id !== 'meeting') {
+        onStatus(id, 'idle');
+      } else {
+        meetingParticipants.forEach((pid) => onStatus(pid, 'idle'));
+      }
       if (err.name === 'AbortError') {
         setHistory(id, sent.slice(0, -1));
       } else {
@@ -534,6 +704,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     }
     live.clear();
     clearAllHistory();
+    clearHistory('meeting');
     pendingAttachments = [];
     renderAttachmentPreview();
     if (currentId) {
@@ -547,6 +718,67 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   }
   if (els.sidebarResetAll) {
     els.sidebarResetAll.addEventListener('click', handleResetAll);
+  }
+
+  // Preset buttons & Kick button in meeting bar
+  if (els.meetingBar) {
+    els.meetingBar.addEventListener('click', (e) => {
+      const presetBtn = e.target.closest('.preset-btn[data-preset]');
+      if (presetBtn) {
+        const p = presetBtn.dataset.preset;
+        if (p === 'leads') {
+          meetingParticipants = allLeaders().map((a) => a.id);
+        } else if (p === 'clear') {
+          meetingParticipants = [];
+        } else {
+          meetingParticipants = agentsOf(p).map((a) => a.id);
+        }
+        saveMeetingParticipants(meetingParticipants);
+        renderMeetingParticipants();
+        return;
+      }
+
+      const kickBtn = e.target.closest('.meeting-chip-kick');
+      if (kickBtn) {
+        const kid = kickBtn.dataset.id;
+        meetingParticipants = meetingParticipants.filter((pid) => pid !== kid);
+        saveMeetingParticipants(meetingParticipants);
+        renderMeetingParticipants();
+        return;
+      }
+    });
+  }
+
+  if (els.clearMeetingMembers) {
+    els.clearMeetingMembers.addEventListener('click', () => {
+      meetingParticipants = [];
+      saveMeetingParticipants(meetingParticipants);
+      renderMeetingParticipants();
+    });
+  }
+
+  if (els.selectAddMember) {
+    els.selectAddMember.addEventListener('change', (e) => {
+      const newId = e.target.value;
+      if (newId && !meetingParticipants.includes(newId)) {
+        meetingParticipants.push(newId);
+        saveMeetingParticipants(meetingParticipants);
+        renderMeetingParticipants();
+      }
+      e.target.value = '';
+    });
+  }
+
+  if (els.openMeeting) {
+    els.openMeeting.addEventListener('click', () => {
+      onSelect('meeting');
+    });
+  }
+
+  if (els.topbarMeeting) {
+    els.topbarMeeting.addEventListener('click', () => {
+      onSelect('meeting');
+    });
   }
 
   els.messages.addEventListener('click', async (e) => {
@@ -580,8 +812,9 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     if (exportBtn) {
       const type = exportBtn.dataset.export;
       const bubbleEl = exportBtn.closest('.msg').querySelector('.bubble');
-      const agent = agentById(currentId);
-      const agentTitle = agent ? `${agent.name} (${agent.role})` : 'Kantor AI';
+      const agent = currentId === 'meeting' ? null : agentById(currentId);
+      const agentTitle = agent ? `${agent.name} (${agent.role})` : (currentId === 'meeting' ? 'Ruang Rapat Bersama Pak Fatsyah' : 'Kantor AI');
+      const filePrefix = currentId === 'meeting' ? 'Rapat-Tim' : (agent?.id || 'kantor');
 
       const downloadBlob = (blob, filename) => {
         const url = URL.createObjectURL(blob);
@@ -628,7 +861,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
         );
 
         const zipBlob = await zip.generateAsync({ type: 'blob' });
-        downloadBlob(zipBlob, `Proyek-${agent?.id || 'kantor'}-${Date.now()}.zip`);
+        downloadBlob(zipBlob, `Proyek-${filePrefix}-${Date.now()}.zip`);
         flash(exportBtn, `Tersimpan (${fileCount} kode + MD)`);
       } else if (type === 'ppt') {
         const clone = bubbleEl.cloneNode(true);
@@ -736,7 +969,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
 </body>
 </html>`;
         const pptBlob = new Blob([presentationHtml], { type: 'text/html;charset=utf-8' });
-        downloadBlob(pptBlob, `Presentasi-${agent?.id || 'kantor'}-${Date.now()}.html`);
+        downloadBlob(pptBlob, `Presentasi-${filePrefix}-${Date.now()}.html`);
         flash(exportBtn, `Tersimpan (${slides.length} Slide)`);
       } else if (type === 'word') {
         const clone = bubbleEl.cloneNode(true);
@@ -762,7 +995,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
           </body>
           </html>`;
         const blob = new Blob([html], { type: 'application/msword;charset=utf-8' });
-        downloadBlob(blob, `Dokumen-${agent?.id || 'kantor'}-${Date.now()}.doc`);
+        downloadBlob(blob, `Dokumen-${filePrefix}-${Date.now()}.doc`);
         flash(exportBtn, 'Tersimpan');
       } else if (type === 'excel') {
         const tables = bubbleEl.querySelectorAll('table');
@@ -780,7 +1013,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
           csv = lines.map((l) => `"${l.replace(/"/g, '""')}"`).join('\r\n');
         }
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        downloadBlob(blob, `Data-${agent?.id || 'kantor'}-${Date.now()}.csv`);
+        downloadBlob(blob, `Data-${filePrefix}-${Date.now()}.csv`);
         flash(exportBtn, 'Tersimpan');
       } else if (type === 'pdf') {
         const clone = bubbleEl.cloneNode(true);

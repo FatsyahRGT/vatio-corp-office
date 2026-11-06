@@ -17,7 +17,9 @@ const AGENT_SKILL_MAP = {
   ira: 'academic/kaprodi-approval.md',
   anindya: 'academic/jurnal-sitasi.md',
   dimas: 'academic/metodologi-olahdata.md',
-  // Project Analyst & Modeling
+  // Project Analyst, Management & Modeling
+  radit: 'analyst/project-manager.md',
+  clara: 'analyst/use-case-diagram.md',
   gilang: 'analyst/activity-diagram.md',
   fauzan: 'analyst/dfd-process.md',
   tari: 'analyst/erd-database.md',

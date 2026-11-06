@@ -37,11 +37,19 @@ export const AGENTS = [
     ['Component Livewire untuk form', 'Layout Blade yang rapi', 'Filament resource custom'], false,
     ['Livewire Components', 'Blade Architecture', 'Filament Resource', 'Form State Management']),
 
-  // ---------- Project Analyst & Modeling ----------
+  // ---------- Project Analyst, Management & Modeling ----------
   A('dita', 'analyst', 'Dita Anggraini', 'F', 'Lead Analyst', 'PRD end-to-end, scope, prioritas, komunikasi stakeholder, review dokumen',
     { skin: 0, hair: '#3a2417', style: 'long', glasses: true },
     ['Buat PRD dari ide ini', 'Prioritaskan fitur MVP', 'Review PRD gue'], true,
     ['PRD End-to-End', 'MVP Prioritization', 'Scope Management', 'Stakeholder Alignment']),
+  A('radit', 'analyst', 'Raditya Pratama, PMP', 'M', 'Senior Project Manager & Agile Coach', 'Scrum & Agile framework, Sprint Planning, WBS, Burndown Chart, Critical Path Method, manajemen risiko & mitigasi, delivery roadmap',
+    { skin: 2, hair: '#2b2118', style: 'short', glasses: true },
+    ['Susun Sprint Backlog dan estimasi story points', 'Buat WBS & roadmap rilis MVP (Agile Scrum)', 'Identifikasi matriks risiko & mitigasi proyek'], false,
+    ['Scrum & Agile Framework', 'Sprint Planning & Backlog', 'WBS & Critical Path Method', 'Risk Management & Mitigation']),
+  A('clara', 'analyst', 'Clara Oktavia, S.Kom.', 'F', 'Use Case Architect & Narrative Specialist', 'UML Use Case Diagram, batas sistem (System Boundary), Primary & Secondary Actor, relasi <<include>> & <<extend>>, narasi skenario Use Case (template Cockburn)',
+    { skin: 1, hair: '#3a2417', style: 'long', glasses: false },
+    ['Buat Use Case Diagram sistem ini dengan Mermaid', 'Tulis Use Case Narrative lengkap (template Cockburn)', 'Bedah relasi <<include>> dan <<extend>> pada fitur ini'], false,
+    ['Use Case Diagram (UML)', 'Cockburn Use Case Narrative', 'Include & Extend Relationship', 'System Boundary & Actor Modeling']),
   A('gilang', 'analyst', 'Gilang Ramadhan', 'M', 'Activity Diagram Specialist', 'UML Activity Diagram, swimlane antar aktor, decision & merge, fork & join, workflow bisnis, sintaks Mermaid/PlantUML',
     { skin: 2, hair: '#1c1c1c', style: 'short' },
     ['Rancang Activity Diagram checkout', 'Buat alur swimlane antar aktor & sistem', 'Validasi decision node & exception flow'], false,
@@ -161,3 +169,4 @@ export const AGENTS = [
 export const agentById = (id) => AGENTS.find((a) => a.id === id);
 export const divisionById = (id) => DIVISIONS.find((d) => d.id === id);
 export const agentsOf = (divisionId) => AGENTS.filter((a) => a.division === divisionId);
+export const allLeaders = () => AGENTS.filter((a) => a.leader);

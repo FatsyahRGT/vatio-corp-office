@@ -19,6 +19,7 @@
       <span class="brand-mark"></span>
       <div><strong>Vatio Corp</strong><small>Innovation Technology Corporation</small></div>
     </div>
+    <button id="btn-topbar-meeting" class="meeting-topbar-btn" title="Buka Ruang Rapat Tim (Multi-Agen)">🎙️ Ruang Rapat</button>
     <nav id="chips" aria-label="Divisi"></nav>
   </header>
 
@@ -40,6 +41,17 @@
       <div class="sidebar-search">
         <input type="text" id="agent-search" placeholder="Cari divisi, karyawan, skill…" autocomplete="off" />
       </div>
+
+      <!-- Card Akses Cepat Ruang Rapat -->
+      <div class="meeting-entry-card" id="btn-open-meeting" title="Buka Ruang Rapat Tim Bersama">
+        <div class="meeting-entry-icon">🎙️</div>
+        <div class="meeting-entry-info">
+          <strong>Ruang Rapat Tim</strong>
+          <small id="meeting-participant-count">Multi-Agen Group Meeting</small>
+        </div>
+        <span class="meeting-entry-badge">Grup</span>
+      </div>
+
       <button type="button" id="sidebar-btn-reset-all" class="sidebar-reset-btn" title="Hapus seluruh riwayat obrolan di semua divisi untuk memulai topik proyek baru">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="3 6 5 6 21 6"></polyline>
@@ -78,6 +90,33 @@
         <button id="btn-close" class="icon-btn" title="Tutup" aria-label="Tutup chat">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
+      </div>
+
+      <!-- Bar Pengaturan Ruang Rapat (Hanya muncul saat mode meeting) -->
+      <div id="meeting-bar" class="meeting-bar" hidden>
+        <div class="meeting-presets">
+          <span class="meeting-label">Preset Rapat:</span>
+          <button type="button" class="preset-btn" data-preset="leads">👑 Semua Lead (7)</button>
+          <button type="button" class="preset-btn" data-preset="analyst">📊 Divisi Analis</button>
+          <button type="button" class="preset-btn" data-preset="laravel">🔴 Divisi Laravel</button>
+          <button type="button" class="preset-btn" data-preset="js">🟡 Divisi JS</button>
+          <button type="button" class="preset-btn" data-preset="mobile">🟢 Divisi Mobile</button>
+          <button type="button" class="preset-btn" data-preset="bizdata">📈 Divisi Bisnis</button>
+          <button type="button" class="preset-btn" data-preset="notulen">🟣 Divisi Notulen</button>
+          <button type="button" class="preset-btn" data-preset="academic">🎓 Divisi Riset</button>
+          <button type="button" class="preset-btn preset-clear" id="btn-clear-meeting-participants" title="Keluarkan semua anggota">🧹 Kosongkan</button>
+        </div>
+        <div class="meeting-participants-wrap">
+          <div class="meeting-participants-header">
+            <span id="meeting-members-title"><strong>Anggota di Ruangan (0):</strong></span>
+            <div class="add-member-dropdown-wrap">
+              <select id="select-add-member" class="select-add-member">
+                <option value="">+ Tambah Anggota ke Ruangan...</option>
+              </select>
+            </div>
+          </div>
+          <div id="meeting-participants-list" class="meeting-participants-list"></div>
+        </div>
       </div>
 
       <div id="mates" class="mates"></div>

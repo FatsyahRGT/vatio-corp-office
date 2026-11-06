@@ -85,6 +85,20 @@ const panel = createPanel({
 });
 
 function selectAgent(id) {
+  if (id === 'meeting') {
+    if (selectedId && byId.has(selectedId)) byId.get(selectedId).selected = false;
+    selectedId = 'meeting';
+    document.body.classList.add('chatting');
+    $('panel').setAttribute('aria-hidden', 'false');
+    panel.open('meeting');
+    stage.focus('overview');
+    stage.setRing(null);
+    tags.setSelected(null);
+    markChip('overview');
+    requestAnimationFrame(setInset);
+    history.replaceState(null, '', '#meeting');
+    return;
+  }
   const agent = agentById(id);
   const c = byId.get(id);
   if (!agent || !c) return;
@@ -109,6 +123,21 @@ function selectAgent(id) {
 }
 
 function closeChat(refocus) {
+  if (selectedId === 'meeting') {
+    selectedId = null;
+    panel.close();
+    document.body.classList.remove('chatting');
+    $('panel').setAttribute('aria-hidden', 'true');
+    $('banner').hidden = true;
+    stage.setRing(null);
+    tags.setSelected(null);
+    stage.setInset(0, 0);
+    if (refocus) {
+      stage.focus('overview');
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    return;
+  }
   if (!selectedId) return;
   const c = byId.get(selectedId);
   const div = divisionById(c.agent.division);
@@ -184,7 +213,8 @@ $('gate-form').addEventListener('submit', async (e) => {
 
   // buka karyawan dari URL, mis. https://office.devan.my.id/#rina
   const hash = decodeURIComponent(location.hash.slice(1));
-  if (hash && byId.has(hash)) selectAgent(hash);
+  if (hash === 'meeting') selectAgent('meeting');
+  else if (hash && byId.has(hash)) selectAgent(hash);
   else goTo('overview');
 
   const hide = () => {

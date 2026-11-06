@@ -3,8 +3,8 @@ import express from 'express';
 import { timingSafeEqual } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { agentById } from '../shared/roster.js';
-import { buildSystemPrompt } from './prompts.js';
+import { agentById, divisionById } from '../shared/roster.js';
+import { buildSystemPrompt, buildMeetingPrompt } from './prompts.js';
 import { streamNineRouter, nineRouterBase } from './ninerouter.js';
 import { delegate, wantsDelegation } from './delegate.js';
 
@@ -94,10 +94,25 @@ app.get('/api/config', (req, res) => {
 app.get('/api/verify', requireAccess, (req, res) => res.json({ ok: true }));
 
 app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
-  const agent = agentById(req.body?.agentId);
-  if (!agent) return res.status(400).json({ error: 'Karyawan tidak ditemukan.' });
+  const { agentId, participantIds, messages: rawMessages } = req.body || {};
+  const isMeeting = agentId === 'meeting';
 
-  const messages = cleanMessages(req.body?.messages);
+  let agent = null;
+  let participants = [];
+
+  if (isMeeting) {
+    participants = (Array.isArray(participantIds) ? participantIds : [])
+      .map((id) => agentById(id))
+      .filter(Boolean);
+    if (!participants.length) {
+      return res.status(400).json({ error: 'Ruang rapat kosong. Silakan undang minimal 1 karyawan ke dalam rapat.' });
+    }
+  } else {
+    agent = agentById(agentId);
+    if (!agent) return res.status(400).json({ error: 'Karyawan tidak ditemukan.' });
+  }
+
+  const messages = cleanMessages(rawMessages);
   if (!messages.length || messages[messages.length - 1].role !== 'user') {
     return res.status(400).json({ error: 'Pesan kosong.' });
   }
@@ -122,7 +137,6 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
     res.on('close', () => { if (!res.writableFinished) ac.abort(); });
     const modelFor = (a) => (a.leader ? MODEL_LEADER : MODEL_TEAM);
 
-    // Semua panggilan diarahkan langsung ke 9Router
     const run = async ({ model, system, messages: msgs, maxTokens, onText }) => {
       const u = await streamNineRouter({
         model,
@@ -132,28 +146,49 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
         signal: ac.signal,
         onText,
       });
-      console.log(`[chat] ${agent.id} model=${model} in=${u.input} out=${u.output}`);
+      console.log(`[chat] model=${model} in=${u.input} out=${u.output}`);
     };
 
-    const last = messages[messages.length - 1].content;
-    if (agent.leader && wantsDelegation(last)) {
-      await delegate({
-        leader: agent,
-        messages,
-        run,
-        modelFor,
-        maxTokens: MAX_TOKENS,
-        send: (o) => { if (!closed) send(o); },
-        isClosed: () => closed,
-      });
+    if (isMeeting) {
+      // MODE RUANG RAPAT (GROUP MEETING): setiap anggota di ruangan bergantian memberikan respon/rekomendasi
+      send({ t: `📢 **Ruang Rapat Bersama Pak Fatsyah** dimulai (${participants.length} anggota hadir)\n\n` });
+
+      for (let i = 0; i < participants.length; i++) {
+        if (closed) break;
+        const p = participants[i];
+        const pDiv = divisionById(p.division);
+        send({ t: `\n\n---\n### 👤 ${p.name}\n*${p.role} · Divisi ${pDiv.name}*\n\n` });
+
+        await run({
+          model: modelFor(p),
+          system: buildMeetingPrompt(p, participants),
+          messages,
+          maxTokens: Math.min(MAX_TOKENS, 4000),
+          onText: (t) => { if (!closed) send({ t }); },
+        });
+      }
     } else {
-      await run({
-        model: modelFor(agent),
-        system: buildSystemPrompt(agent),
-        messages,
-        maxTokens: MAX_TOKENS,
-        onText: (t) => { if (!closed) send({ t }); },
-      });
+      // MODE SINGLE AGENT CHAT
+      const last = messages[messages.length - 1].content;
+      if (agent.leader && wantsDelegation(last)) {
+        await delegate({
+          leader: agent,
+          messages,
+          run,
+          modelFor,
+          maxTokens: MAX_TOKENS,
+          send: (o) => { if (!closed) send(o); },
+          isClosed: () => closed,
+        });
+      } else {
+        await run({
+          model: modelFor(agent),
+          system: buildSystemPrompt(agent),
+          messages,
+          maxTokens: MAX_TOKENS,
+          onText: (t) => { if (!closed) send({ t }); },
+        });
+      }
     }
 
     if (!closed) send({ done: true });

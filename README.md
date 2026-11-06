@@ -11,7 +11,7 @@ Setiap divisi memiliki ruangan tersendiri di dalam kantor virtual 3D lengkap den
 | Divisi | Lead | Anggota & Keahlian |
 | :--- | :--- | :--- |
 | **Laravel** | **Bayu Firmansyah** (Lead Architect & Code Review) | • **Citra Lestari** (Backend, REST API, Sanctum)<br>• **Arief Setiawan** (Database, Queue, Migrasi)<br>• **Siti Nurhaliza** (Livewire, Blade, Filament) |
-| **Project Analyst** | **Dita Anggraini** (Lead Analyst & Scope) | • **Gilang Ramadhan** (Activity Diagram, Swimlane, Mermaid)<br>• **Fauzan Alamsyah** (DFD Level 0-2, Kamus Data, P-Spec)<br>• **Lestari Handayani** (ERD Crow's Foot/Chen, Normalisasi 1NF-3NF)<br>• **Viona Maharani** (Agentic AI, Prompt Engineering, Tool Schemas)<br>• **Raka Wijaya** (User Story, Acceptance Criteria)<br>• **Nadia Safitri** (UX, User Flow, Wireframe) |
+| **Project Analyst** | **Dita Anggraini** (Lead Analyst & Scope) | • **Raditya Pratama, PMP** (Senior Project Manager, Scrum Agile, WBS & CPM)<br>• **Clara Oktavia, S.Kom.** (Use Case Architect, Cockburn Narrative, Include & Extend)<br>• **Gilang Ramadhan** (Activity Diagram, Swimlane, Mermaid)<br>• **Fauzan Alamsyah** (DFD Level 0-2, Kamus Data, P-Spec)<br>• **Lestari Handayani** (ERD Crow's Foot/Chen, Normalisasi 1NF-3NF)<br>• **Viona Maharani** (Agentic AI, Prompt Engineering, Tool Schemas)<br>• **Raka Wijaya** (User Story, Acceptance Criteria)<br>• **Nadia Safitri** (UX, User Flow, Wireframe) |
 | **JavaScript Web** | **Fajar Nugroho** (Lead Frontend Architect) | • **Laras Ayuningtyas** (React, Next.js)<br>• **Andi Kurniawan** (Vue 3, Nuxt, Pinia)<br>• **Maya Anggraini** (Node.js, Express, NestJS) |
 | **Mobile Apps** | **Hendra Gunawan** (Lead Mobile Architect) | • **Dewi Kartika** (Flutter UI, Widget, Animasi)<br>• **Yoga Pratama** (Riverpod, Bloc, State & Data)<br>• **Putri Maharani** (QA, Testing, Build APK/IPA) |
 | **Bisnis & Data** | **Rizky Ramadhan** (Lead Business Analyst) | • **Kirana Dewanti** (Data Analyst, SQL, Dashboard)<br>• **Eko Saputra** (Data Engineer, ETL Pipeline)<br>• **Melati Handayani** (Market & Competitor Research) |
@@ -26,26 +26,33 @@ Setiap divisi memiliki ruangan tersendiri di dalam kantor virtual 3D lengkap den
    Dibuat dengan Three.js tanpa asset 3D eksternal yang berat—seluruh meja, kursi, laptop, dispenser kopi, dan karakter dimodelkan secara prosedural dan ringan.
 2. **Streaming AI Chat (SSE)**  
    Respon agen ditampilkan secara real-time kata-demi-kata via Server-Sent Events dengan kapasitas token panjang (8.000 tokens) sehingga penjelasan kode dan analisis tidak terpotong.
-3. **Mode Tampilan Penuh ala WhatsApp Web**  
+3. **Ruang Rapat Tim (Multi-Agen Group Meeting)**  
+   Forum konsultasi dan rapat bersama Pak Fatsyah. Anda dapat membuka ruang rapat melalui tombol **🎙️ Ruang Rapat** di topbar atau card grup di sidebar WhatsApp Web:
+   - **Preset Rapat Dinamis**: Pilih preset cepat seperti *👑 Semua Lead (7)* untuk brainstorming lintas divisi, *📊 Divisi Analis* untuk pemodelan sistem, *🔴 Divisi Laravel*, dll.
+   - **Tambah & Kick Anggota**: Tambah karyawan spesialis ke ruangan lewat dropdown atau kick (keluarkan) anggota dengan tombol `✕` sesuai agenda mingguan.
+   - **Respon Berurutan & Rekomendasi Multiperspektif**: Setiap anggota yang berada di ruang rapat akan memberikan pandangan, solusi, dan rekomendasi mendalam dari sudut pandang spesialisasinya secara berurutan.
+4. **Persona & Komunikasi Korporat (Pak Fatsyah)**  
+   Semua karyawan dan Team Lead secara konsisten mengenali dan memanggil Anda sebagai **Pak Fatsyah**, menyajikan pandangan yang taktis, solutif, dan profesional.
+5. **Mode Tampilan Penuh ala WhatsApp Web**  
    Tombol perbesar layar di pojok kanan atas chat mengubah antarmuka menjadi mode layar lebar ala WhatsApp Web lengkap dengan sidebar daftar anggota, pencarian karakter, dan badge keahlian.
-4. **Lampiran File & Gambar (Unggah Pengguna)**  
+6. **Lampiran File & Gambar (Unggah Pengguna)**  
    Pengguna dapat mengunggah gambar (dengan thumbnail pratinjau instan) atau file teks/kode/dokumen untuk dianalisis bersama agen.
-5. **Multi-Format Export & Generator File (Asisten AI)**  
+7. **Multi-Format Export & Generator File (Asisten AI)**  
    Setiap pesan asisten dilengkapi tombol *one-click download*:
    - 📦 **ZIP**: Mengekstrak seluruh blok kode dalam pesan menjadi file `.zip` lengkap dengan direktori path file dan dokumentasi proyek `CATATAN-PROYEK.md`.
    - 📽️ **PPT**: Mengubah dokumen/notulen menjadi slide presentasi HTML interaktif yang siap diproyeksikan (navigasi keyboard panah & spasi).
    - 📄 **Word**: Mengunduh dokumen `.doc` yang rapi dan kompatibel dengan Microsoft Word / Google Docs.
    - 📊 **Excel**: Mengonversi tabel Markdown secara instan menjadi format spreadsheet `.csv` (dengan UTF-8 BOM).
    - 📑 **PDF**: Membuka tampilan cetak bersih untuk disimpan sebagai PDF.
-6. **Delegasi Tugas Tim (`/tim`)**  
+8. **Delegasi Tugas Tim (`/tim`)**  
    Ketik perintah `/tim` atau kata kunci seperti *"delegasikan ke tim"* saat berbicara dengan Team Lead. Leader akan menyusun rencana pembagian tugas, menugaskan anggota yang relevan, dan merangkum hasil kerja tim untuk Anda.
-7. **Divisi Akademisi Khusus Skripsi**  
+9. **Divisi Akademisi Khusus Skripsi**  
    Divisi pendamping skripsi yang siap memandu Anda dari evaluasi judul oleh Kaprodi, bimbingan Bab 1-5 oleh Dosen Pembimbing, penelusuran referensi Scopus/SINTA oleh Editor Literatur, hingga analisis data statistik oleh Olah Data.
-8. **Proteksi & Pengaman Biaya**  
-   Dilengkapi kode akses pengunjung (`ACCESS_CODE`), in-memory rate limiting per IP, serta batas kuota permintaan harian (`DAILY_MAX_REQUESTS`).
-9. **Reset Sesi Cepat & Global**  
-   Tersedia tombol reset obrolan per karyawan dan tombol *Reset Sesi Semua Divisi* (ikon tempat sampah di panel head dan tombol merah di sidebar WhatsApp Web) untuk membersihkan riwayat semua divisi secara instan ketika ingin membahas proyek berbeda.
-10. **Rich Markdown & Tabel Responsif**  
+10. **Proteksi & Pengaman Biaya**  
+    Dilengkapi kode akses pengunjung (`ACCESS_CODE`), in-memory rate limiting per IP, serta batas kuota permintaan harian (`DAILY_MAX_REQUESTS`).
+11. **Reset Sesi Cepat & Global**  
+    Tersedia tombol reset obrolan per karyawan dan tombol *Reset Sesi Semua Divisi* (ikon tempat sampah di panel head dan tombol merah di sidebar WhatsApp Web) untuk membersihkan riwayat semua divisi secara instan ketika ingin membahas proyek berbeda.
+12. **Rich Markdown & Tabel Responsif**  
     Mendukung perenderan tabel Markdown bergaris rapi dengan alignment semantik, multiline break `<br>`, kutipan *blockquote*, serta blok kode ber-syntax highlight.
 
 ---
