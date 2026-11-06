@@ -92,6 +92,12 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     selectAddMember: $('select-add-member'),
     clearMeetingMembers: $('btn-clear-meeting-participants'),
     meetingMembersTitle: $('meeting-members-title'),
+    headToggleMeeting: $('btn-toggle-meeting-bar'),
+    meetingToggleBody: $('btn-toggle-meeting-body'),
+    meetingToggleText: $('meeting-toggle-text'),
+    meetingToggleIcon: $('meeting-toggle-icon'),
+    meetingBarSummary: $('meeting-bar-summary'),
+    meetingBarContent: $('meeting-bar-content'),
   };
 
   let currentId = null;
@@ -100,6 +106,34 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   const live = new Map(); // agentId -> { text, el, abort }
 
   const MEETING_STORAGE_KEY = 'kantorai.meeting.participants.v1';
+  const MEETING_COLLAPSE_KEY = 'kantorai.meeting.collapsed.v1';
+  let isMeetingCollapsed = localStorage.getItem(MEETING_COLLAPSE_KEY) === 'true';
+
+  function setMeetingCollapsed(collapsed) {
+    isMeetingCollapsed = collapsed;
+    try {
+      localStorage.setItem(MEETING_COLLAPSE_KEY, String(collapsed));
+    } catch {}
+    if (els.meetingBar) {
+      els.meetingBar.classList.toggle('collapsed', isMeetingCollapsed);
+    }
+    const count = meetingParticipants.length;
+    if (els.meetingToggleText) {
+      els.meetingToggleText.textContent = isMeetingCollapsed
+        ? `Atur Peserta (${count})`
+        : 'Sembunyikan';
+    }
+    if (els.meetingToggleIcon) {
+      els.meetingToggleIcon.innerHTML = isMeetingCollapsed
+        ? '<polyline points="6 9 12 15 18 9"></polyline>'
+        : '<polyline points="18 15 12 9 6 15"></polyline>';
+    }
+    if (els.headToggleMeeting) {
+      els.headToggleMeeting.title = isMeetingCollapsed
+        ? 'Tampilkan Pengaturan Peserta Rapat'
+        : 'Sembunyikan Pengaturan Peserta Rapat';
+    }
+  }
 
   function getMeetingParticipants() {
     try {
@@ -128,6 +162,8 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     const count = meetingParticipants.length;
     if (els.meetingCount) els.meetingCount.textContent = `${count} Anggota Aktif`;
     if (els.meetingMembersTitle) els.meetingMembersTitle.innerHTML = `<strong>Anggota di Ruangan (${count}):</strong>`;
+    if (els.meetingBarSummary) els.meetingBarSummary.textContent = `${count} Anggota Aktif`;
+    if (isMeetingCollapsed && els.meetingToggleText) els.meetingToggleText.textContent = `Atur Peserta (${count})`;
 
     els.meetingList.innerHTML = '';
     if (count === 0) {
@@ -399,7 +435,11 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       els.avatar.textContent = '👥';
       els.name.textContent = 'Ruang Rapat Bersama Pak Fatsyah';
       els.role.textContent = 'Forum Kolaborasi & Diskusi Multi-Agen';
-      if (els.meetingBar) els.meetingBar.hidden = false;
+      if (els.headToggleMeeting) els.headToggleMeeting.hidden = false;
+      if (els.meetingBar) {
+        els.meetingBar.hidden = false;
+        setMeetingCollapsed(isMeetingCollapsed);
+      }
       renderMeetingParticipants();
 
       if (els.agentList) {
@@ -430,6 +470,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       return;
     }
 
+    if (els.headToggleMeeting) els.headToggleMeeting.hidden = true;
     if (els.meetingBar) els.meetingBar.hidden = true;
     if (els.openMeeting) els.openMeeting.classList.remove('active');
 
@@ -778,6 +819,18 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   if (els.topbarMeeting) {
     els.topbarMeeting.addEventListener('click', () => {
       onSelect('meeting');
+    });
+  }
+
+  if (els.meetingToggleBody) {
+    els.meetingToggleBody.addEventListener('click', () => {
+      setMeetingCollapsed(!isMeetingCollapsed);
+    });
+  }
+
+  if (els.headToggleMeeting) {
+    els.headToggleMeeting.addEventListener('click', () => {
+      setMeetingCollapsed(!isMeetingCollapsed);
     });
   }
 

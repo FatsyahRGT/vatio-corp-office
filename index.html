@@ -70,6 +70,14 @@
           <strong id="who-name"></strong>
           <span id="who-role"></span>
         </div>
+        <button id="btn-toggle-meeting-bar" class="icon-btn" title="Sembunyikan / Tampilkan Pengaturan Peserta Rapat" aria-label="Toggle pengaturan rapat" hidden>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </button>
         <button id="btn-expand" class="icon-btn" title="Perbesar / Mode WhatsApp Web" aria-label="Perbesar chat">
           <svg id="icon-expand" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 3 21 3 21 9"></polyline>
@@ -94,28 +102,43 @@
 
       <!-- Bar Pengaturan Ruang Rapat (Hanya muncul saat mode meeting) -->
       <div id="meeting-bar" class="meeting-bar" hidden>
-        <div class="meeting-presets">
-          <span class="meeting-label">Preset Rapat:</span>
-          <button type="button" class="preset-btn" data-preset="leads">👑 Semua Lead (7)</button>
-          <button type="button" class="preset-btn" data-preset="analyst">📊 Divisi Analis</button>
-          <button type="button" class="preset-btn" data-preset="laravel">🔴 Divisi Laravel</button>
-          <button type="button" class="preset-btn" data-preset="js">🟡 Divisi JS</button>
-          <button type="button" class="preset-btn" data-preset="mobile">🟢 Divisi Mobile</button>
-          <button type="button" class="preset-btn" data-preset="bizdata">📈 Divisi Bisnis</button>
-          <button type="button" class="preset-btn" data-preset="notulen">🟣 Divisi Notulen</button>
-          <button type="button" class="preset-btn" data-preset="academic">🎓 Divisi Riset</button>
-          <button type="button" class="preset-btn preset-clear" id="btn-clear-meeting-participants" title="Keluarkan semua anggota">🧹 Kosongkan</button>
-        </div>
-        <div class="meeting-participants-wrap">
-          <div class="meeting-participants-header">
-            <span id="meeting-members-title"><strong>Anggota di Ruangan (0):</strong></span>
-            <div class="add-member-dropdown-wrap">
-              <select id="select-add-member" class="select-add-member">
-                <option value="">+ Tambah Anggota ke Ruangan...</option>
-              </select>
-            </div>
+        <div class="meeting-bar-header">
+          <div class="meeting-bar-header-left">
+            <span class="meeting-bar-badge">🎙️ Rapat Tim</span>
+            <span id="meeting-bar-summary" class="meeting-bar-summary">0 Anggota Aktif</span>
           </div>
-          <div id="meeting-participants-list" class="meeting-participants-list"></div>
+          <button type="button" id="btn-toggle-meeting-body" class="meeting-toggle-btn" title="Sembunyikan atau tampilkan bilah pengaturan">
+            <span id="meeting-toggle-text">Sembunyikan</span>
+            <svg id="meeting-toggle-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div id="meeting-bar-content" class="meeting-bar-content">
+          <div class="meeting-presets">
+            <span class="meeting-label">Preset Rapat:</span>
+            <button type="button" class="preset-btn" data-preset="leads">👑 Semua Lead (7)</button>
+            <button type="button" class="preset-btn" data-preset="analyst">📊 Divisi Analis</button>
+            <button type="button" class="preset-btn" data-preset="laravel">🔴 Divisi Laravel</button>
+            <button type="button" class="preset-btn" data-preset="js">🟡 Divisi JS</button>
+            <button type="button" class="preset-btn" data-preset="mobile">🟢 Divisi Mobile</button>
+            <button type="button" class="preset-btn" data-preset="bizdata">📈 Divisi Bisnis</button>
+            <button type="button" class="preset-btn" data-preset="notulen">🟣 Divisi Notulen</button>
+            <button type="button" class="preset-btn" data-preset="academic">🎓 Divisi Riset</button>
+            <button type="button" class="preset-btn preset-clear" id="btn-clear-meeting-participants" title="Keluarkan semua anggota">🧹 Kosongkan</button>
+          </div>
+          <div class="meeting-participants-wrap">
+            <div class="meeting-participants-header">
+              <span id="meeting-members-title"><strong>Anggota di Ruangan (0):</strong></span>
+              <div class="add-member-dropdown-wrap">
+                <select id="select-add-member" class="select-add-member">
+                  <option value="">+ Tambah Anggota ke Ruangan...</option>
+                </select>
+              </div>
+            </div>
+            <div id="meeting-participants-list" class="meeting-participants-list"></div>
+          </div>
         </div>
       </div>
 
