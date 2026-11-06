@@ -150,6 +150,15 @@
       <div id="attachment-preview" class="attachment-preview" hidden></div>
 
       <form id="composer" class="composer" autocomplete="off">
+        <!-- Autocomplete Slash Command Popup (Antigravity Style) -->
+        <div id="slash-popup" class="slash-popup" hidden>
+          <div class="slash-popup-header">
+            <span class="slash-popup-title">🎯 Target Respon Ruang Rapat</span>
+            <span class="slash-popup-hint">Gunakan ↑ ↓ dan Enter</span>
+          </div>
+          <div id="slash-popup-list" class="slash-popup-list"></div>
+        </div>
+
         <input type="file" id="file-input" hidden multiple accept="image/*,.pdf,.doc,.docx,.txt,.csv,.json,.js,.php,.py,.zip,.md,.html" />
         <button type="button" id="btn-attach" class="icon-btn attach-btn" title="Lampirkan file atau gambar (gambar, pdf, doc, code, zip)">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

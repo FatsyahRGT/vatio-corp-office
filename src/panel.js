@@ -98,6 +98,8 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     meetingToggleIcon: $('meeting-toggle-icon'),
     meetingBarSummary: $('meeting-bar-summary'),
     meetingBarContent: $('meeting-bar-content'),
+    slashPopup: $('slash-popup'),
+    slashList: $('slash-popup-list'),
   };
 
   let currentId = null;
@@ -221,6 +223,174 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       return tokens.some((t) => normName.includes(t));
     });
     return agent || null;
+  }
+
+  function getAgentSlashCmd(agent) {
+    if (!agent) return '';
+    if (agent.id === 'bambang') return '/prof.bambang';
+    if (agent.id === 'ira') return '/dr.ira';
+    return `/${agent.id}`;
+  }
+
+  let slashFiltered = [];
+  let slashSelectedIndex = 0;
+  let isSlashOpen = false;
+
+  function closeSlashPopup() {
+    isSlashOpen = false;
+    if (els.slashPopup) els.slashPopup.hidden = true;
+    slashFiltered = [];
+    slashSelectedIndex = 0;
+  }
+
+  function updateSlashPopup(query = '') {
+    if (!els.slashPopup || !els.slashList || currentId !== 'meeting') {
+      closeSlashPopup();
+      return;
+    }
+
+    const allItem = {
+      id: 'all',
+      cmd: '/all',
+      name: 'Semua Anggota Rapat',
+      role: 'Seluruh divisi aktif bergantian menjawab',
+      divName: 'Semua Tim',
+      color: '#6366f1',
+      badge: 'Semua Menjawab',
+      isAll: true,
+    };
+
+    const memberItems = meetingParticipants
+      .map((pid) => {
+        const a = agentById(pid);
+        if (!a) return null;
+        const div = divisionById(a.division);
+        return {
+          id: a.id,
+          cmd: getAgentSlashCmd(a),
+          name: a.name,
+          role: a.role,
+          divName: div.name,
+          color: div.color,
+          initials: initials(a.name),
+          badge: 'Target Khusus',
+          isAll: false,
+        };
+      })
+      .filter(Boolean);
+
+    const candidates = [allItem, ...memberItems];
+    const q = (query || '').toLowerCase().trim();
+
+    if (!q) {
+      slashFiltered = candidates;
+    } else {
+      slashFiltered = candidates.filter((item) => {
+        const cmdClean = item.cmd.replace('/', '').toLowerCase();
+        return (
+          cmdClean.includes(q) ||
+          item.id.toLowerCase().includes(q) ||
+          item.name.toLowerCase().includes(q) ||
+          item.role.toLowerCase().includes(q) ||
+          item.divName.toLowerCase().includes(q)
+        );
+      });
+    }
+
+    if (slashFiltered.length === 0) {
+      closeSlashPopup();
+      return;
+    }
+
+    isSlashOpen = true;
+    els.slashPopup.hidden = false;
+    slashSelectedIndex = Math.min(slashSelectedIndex, slashFiltered.length - 1);
+    if (slashSelectedIndex < 0) slashSelectedIndex = 0;
+    renderSlashList();
+  }
+
+  function updateSlashHighlight() {
+    if (!els.slashList) return;
+    const items = els.slashList.querySelectorAll('.slash-item');
+    items.forEach((item, idx) => {
+      item.classList.toggle('selected', idx === slashSelectedIndex);
+    });
+  }
+
+  function scrollSlashIntoView() {
+    if (!els.slashList) return;
+    const selectedEl = els.slashList.querySelector(`.slash-item[data-idx="${slashSelectedIndex}"]`);
+    selectedEl?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function renderSlashList() {
+    if (!els.slashList) return;
+    els.slashList.innerHTML = '';
+    slashFiltered.forEach((item, idx) => {
+      const row = document.createElement('div');
+      row.className = `slash-item ${idx === slashSelectedIndex ? 'selected' : ''}`;
+      row.dataset.idx = idx;
+      row.style.setProperty('--c', item.color);
+
+      const avatarHtml = item.isAll
+        ? `<div class="slash-item-avatar all-avatar">👥</div>`
+        : `<div class="slash-item-avatar">${item.initials}</div>`;
+
+      row.innerHTML = `
+        ${avatarHtml}
+        <div class="slash-item-info">
+          <div class="slash-item-main">
+            <span class="slash-item-cmd">${item.cmd}</span>
+            <span class="slash-item-name">${item.name}</span>
+            <span class="slash-item-badge">${item.badge}</span>
+          </div>
+          <div class="slash-item-desc">${item.role} · ${item.divName}</div>
+        </div>
+      `;
+
+      row.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        selectSlashItem(item);
+      });
+
+      row.addEventListener('mouseenter', () => {
+        slashSelectedIndex = idx;
+        updateSlashHighlight();
+      });
+
+      els.slashList.appendChild(row);
+    });
+    scrollSlashIntoView();
+  }
+
+  function selectSlashItem(item) {
+    if (!item) return;
+    els.input.value = `${item.cmd} `;
+    closeSlashPopup();
+
+    if (item.isAll) {
+      responseTargets = [...meetingParticipants];
+      try {
+        localStorage.setItem(MEETING_RULE_KEY, JSON.stringify({ type: 'all' }));
+      } catch {}
+      updateRuleDisplay();
+    } else {
+      if (!meetingParticipants.includes(item.id)) {
+        meetingParticipants.push(item.id);
+        saveMeetingParticipants(meetingParticipants);
+        renderMeetingParticipants();
+      }
+      responseTargets = [item.id];
+      try {
+        localStorage.setItem(MEETING_RULE_KEY, JSON.stringify({ id: item.id }));
+      } catch {}
+      updateRuleDisplay();
+    }
+
+    autosize();
+    syncSend();
+    els.input.focus();
   }
 
   function renderMeetingParticipants() {
@@ -496,6 +666,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   }
 
   function render(agentId) {
+    closeSlashPopup();
     if (agentId === 'meeting') {
       document.body.style.setProperty('--c', '#6366f1');
       els.avatar.style.setProperty('--c', '#6366f1');
@@ -608,6 +779,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   }
 
   async function submit(text) {
+    closeSlashPopup();
     const id = currentId;
     text = (text || '').trim();
 
@@ -750,16 +922,66 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   // ---------- event ----------
   els.form.addEventListener('submit', (e) => {
     e.preventDefault();
+    closeSlashPopup();
     submit(els.input.value);
   });
   els.input.addEventListener('input', () => {
     autosize();
     syncSend();
+
+    const val = els.input.value;
+    if (currentId === 'meeting' && val.startsWith('/')) {
+      const spaceIdx = val.indexOf(' ');
+      if (spaceIdx === -1) {
+        const query = val.slice(1);
+        updateSlashPopup(query);
+      } else {
+        closeSlashPopup();
+      }
+    } else {
+      closeSlashPopup();
+    }
   });
   els.input.addEventListener('keydown', (e) => {
+    if (isSlashOpen) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        slashSelectedIndex = (slashSelectedIndex + 1) % slashFiltered.length;
+        updateSlashHighlight();
+        scrollSlashIntoView();
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        slashSelectedIndex = (slashSelectedIndex - 1 + slashFiltered.length) % slashFiltered.length;
+        updateSlashHighlight();
+        scrollSlashIntoView();
+        return;
+      }
+      if (e.key === 'Enter' || e.key === 'Tab') {
+        e.preventDefault();
+        if (slashFiltered[slashSelectedIndex]) {
+          selectSlashItem(slashFiltered[slashSelectedIndex]);
+        }
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeSlashPopup();
+        return;
+      }
+    }
+
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
+      closeSlashPopup();
       submit(els.input.value);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (isSlashOpen && els.slashPopup && !els.slashPopup.contains(e.target) && e.target !== els.input) {
+      closeSlashPopup();
     }
   });
 
