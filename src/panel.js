@@ -156,13 +156,80 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   }
 
   let meetingParticipants = getMeetingParticipants();
+  let responseTargets = [...meetingParticipants];
+  const MEETING_RULE_KEY = 'kantorai.meeting.rule.v1';
+
+  try {
+    const saved = localStorage.getItem(MEETING_RULE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.type === 'all') {
+        responseTargets = [...meetingParticipants];
+      } else if (parsed && parsed.id) {
+        const targetAgent = AGENTS.find((a) => a.id === parsed.id);
+        if (targetAgent && meetingParticipants.includes(targetAgent.id)) {
+          responseTargets = [targetAgent.id];
+        }
+      }
+    }
+  } catch {}
+
+  function updateRuleDisplay() {
+    if (!els.meetingBarSummary) return;
+    if (!responseTargets || responseTargets.length === meetingParticipants.length) {
+      els.meetingBarSummary.textContent = `${meetingParticipants.length} Anggota Aktif (Semua)`;
+    } else if (responseTargets.length === 1) {
+      const agent = agentById(responseTargets[0]);
+      const label = agent ? agent.name.split(' ')[0] : responseTargets[0];
+      els.meetingBarSummary.textContent = `Aturan Aktif: /${agent ? agent.id : responseTargets[0]} (${label})`;
+    } else {
+      els.meetingBarSummary.textContent = `${responseTargets.length} Anggota Dipilih`;
+    }
+  }
+
+  function syncResponseTargets() {
+    if (!responseTargets || !responseTargets.every((id) => meetingParticipants.includes(id))) {
+      responseTargets = [...meetingParticipants];
+      try {
+        localStorage.setItem(MEETING_RULE_KEY, JSON.stringify({ type: 'all' }));
+      } catch {}
+    }
+    updateRuleDisplay();
+  }
+
+  function findAgentByCommand(cmd) {
+    const cleanCmd = (cmd || '').toLowerCase().replace(/^[./@]+/, '').trim();
+    if (!cleanCmd || cleanCmd === 'all') return 'all';
+    // 1. Direct ID match
+    let agent = AGENTS.find((a) => a.id.toLowerCase() === cleanCmd);
+    if (agent) return agent;
+    // 2. ID without dots/symbols
+    const cleanNoDot = cleanCmd.replace(/[._-]+/g, '');
+    agent = AGENTS.find((a) => a.id.toLowerCase() === cleanNoDot);
+    if (agent) return agent;
+    // 3. Name comparison
+    const normCmd = cleanCmd.replace(/[._-]+/g, ' ');
+    agent = AGENTS.find((a) => {
+      const normName = a.name.toLowerCase().replace(/[._-]+/g, ' ');
+      return normName.includes(normCmd) || normCmd.includes(a.id.toLowerCase());
+    });
+    if (agent) return agent;
+    // 4. Token comparison (e.g. 'bambang' in 'prof.bambang')
+    const tokens = normCmd.split(/\s+/).filter((t) => t.length > 2);
+    agent = AGENTS.find((a) => {
+      const normName = a.name.toLowerCase();
+      return tokens.some((t) => normName.includes(t));
+    });
+    return agent || null;
+  }
 
   function renderMeetingParticipants() {
     if (!els.meetingList) return;
+    syncResponseTargets();
     const count = meetingParticipants.length;
     if (els.meetingCount) els.meetingCount.textContent = `${count} Anggota Aktif`;
     if (els.meetingMembersTitle) els.meetingMembersTitle.innerHTML = `<strong>Anggota di Ruangan (${count}):</strong>`;
-    if (els.meetingBarSummary) els.meetingBarSummary.textContent = `${count} Anggota Aktif`;
+    updateRuleDisplay();
     if (isMeetingCollapsed && els.meetingToggleText) els.meetingToggleText.textContent = `Atur Peserta (${count})`;
 
     els.meetingList.innerHTML = '';
@@ -543,6 +610,38 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   async function submit(text) {
     const id = currentId;
     text = (text || '').trim();
+
+    // Handle slash commands for meeting mode (e.g. /prof.bambang, /all, /bayu)
+    if (id === 'meeting' && text.startsWith('/')) {
+      const parts = text.split(/\s+/);
+      const cmdRaw = parts.shift().slice(1); // remove leading '/'
+      const remaining = parts.join(' ').trim();
+      const match = findAgentByCommand(cmdRaw);
+
+      if (match === 'all') {
+        responseTargets = [...meetingParticipants];
+        try { localStorage.setItem(MEETING_RULE_KEY, JSON.stringify({ type: 'all' })); } catch {}
+        updateRuleDisplay();
+        text = remaining;
+      } else if (match && typeof match === 'object') {
+        if (!meetingParticipants.includes(match.id)) {
+          meetingParticipants.push(match.id);
+          saveMeetingParticipants(meetingParticipants);
+          renderMeetingParticipants();
+        }
+        responseTargets = [match.id];
+        try { localStorage.setItem(MEETING_RULE_KEY, JSON.stringify({ id: match.id })); } catch {}
+        updateRuleDisplay();
+        text = remaining;
+      }
+
+      if (!text && pendingAttachments.length === 0) {
+        els.input.value = '';
+        autosize();
+        syncSend();
+        return;
+      }
+    }
     if (!id || (!text && pendingAttachments.length === 0) || live.has(id)) return;
 
     if (id === 'meeting' && meetingParticipants.length === 0) {
@@ -596,17 +695,14 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     l.el = bubble('assistant', typingHtml);
     els.messages.appendChild(l.el);
     scrollDown(true);
-    if (id !== 'meeting') {
-      onStatus(id, 'working');
-    } else {
-      meetingParticipants.forEach((pid) => onStatus(pid, 'working'));
-    }
+    const activeTargets = id === 'meeting' ? responseTargets : [id];
+    activeTargets.forEach((pid) => onStatus(pid, 'working'));
     syncSend();
 
     try {
       const full = await streamChat(id, sent, {
         signal: l.abort.signal,
-        participantIds: id === 'meeting' ? meetingParticipants : undefined,
+        participantIds: id === 'meeting' ? responseTargets : undefined,
         onText: (_t, all) => {
           l.text = all;
           if (!l.raf) {
@@ -620,18 +716,10 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       setHistory(id, [...sent, { role: 'assistant', content: full }]);
       live.delete(id);
       if (l.el && currentId === id) l.el.querySelector('.bubble').innerHTML = renderMarkdown(full);
-      if (id !== 'meeting') {
-        onStatus(id, 'done');
-      } else {
-        meetingParticipants.forEach((pid) => onStatus(pid, 'done'));
-      }
+      activeTargets.forEach((pid) => onStatus(pid, 'done'));
     } catch (err) {
       live.delete(id);
-      if (id !== 'meeting') {
-        onStatus(id, 'idle');
-      } else {
-        meetingParticipants.forEach((pid) => onStatus(pid, 'idle'));
-      }
+      activeTargets.forEach((pid) => onStatus(pid, 'idle'));
       if (err.name === 'AbortError') {
         setHistory(id, sent.slice(0, -1));
       } else {

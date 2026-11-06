@@ -102,7 +102,9 @@ function selectAgent(id) {
   const agent = agentById(id);
   const c = byId.get(id);
   if (!agent || !c) return;
-  if (selectedId && selectedId !== id) byId.get(selectedId).selected = false;
+  if (selectedId && selectedId !== id && byId.has(selectedId)) {
+    byId.get(selectedId).selected = false;
+  }
 
   selectedId = id;
   c.selected = true;
