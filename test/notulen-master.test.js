@@ -24,8 +24,8 @@ test('Notulen Master: Ingesti Lintas Divisi dan Sintesis Menghasilkan Master Doc
   assert.ok(existsSync(HACKATHON_DOC_PATH), 'DOKUMEN_VALID_HACKATHON.md harus berhasil dibuat');
 
   const content = readFileSync(FINAL_DOC_PATH, 'utf-8');
-  assert.ok(content.includes('DOKUMEN VALID HACKATHON: Vatio Corp Master Synthesis'), 'Harus memiliki header judul master');
-  assert.ok(content.includes('Case 2: Stronger Communities and Everyday Services'), 'Harus menyasar tema Case 2 GDG ITB');
+  assert.ok(content.includes('DOKUMEN MASTER INOVASI & PROBLEM SOLVING: Vatio Corp Master Synthesis'), 'Harus memiliki header judul master');
+  assert.ok(content.includes('Transformasi Layanan Komunitas & Produktivitas Operasional Modern'), 'Harus menyasar misi inovasi layanan komunitas');
   assert.ok(content.includes('1. Matriks Harmonisasi Keputusan Lintas Divisi'), 'Harus memuat matriks harmonisasi');
   assert.ok(content.includes('2. Keputusan Teknis & Arsitektur (Tech)'), 'Harus memuat bagian keputusan teknis');
   assert.ok(content.includes('3. Proyeksi & Efisiensi Proses Bisnis (Biz)'), 'Harus memuat bagian proyeksi bisnis');

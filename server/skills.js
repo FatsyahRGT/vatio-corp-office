@@ -36,9 +36,9 @@ const AGENT_SKILL_MAP = {
   farhan: 'core/database-performance.md',
   saras: 'core/clean-code-and-debt.md',
   core: 'core/ponytail-minimalist.md',
-  // Solution Architecture & Venture Innovation
+  // Divisi Inovasi & Problem Solving
   sena: 'solution/business-tech-convergence.md',
-  nadira: 'solution/venture-hackathon-pitch.md',
+  nadira: 'solution/venture-strategy-pitch.md',
   rian: 'solution/system-performance-sre.md',
   arga: 'solution/code-topology-graphify.md',
   solution: 'solution/business-tech-convergence.md',

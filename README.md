@@ -18,7 +18,7 @@ Setiap divisi memiliki ruangan tersendiri di dalam kantor virtual 3D lengkap den
 | **Notulen & Dokumen** | **Bagas Pratama** (Notulen Lead & Orchestrator) | • **Dian Kusuma** (Word / Docx & Laporan Resmi)<br>• **Ferry Hidayat** (Excel / CSV & Estimasi Biaya/Timeline)<br>• **Rina Amalia** (PDF Formatting & Presentasi Eksekutif) |
 | **Akademisi & Riset** | **Prof. Bambang Sudiro, Ph.D.** (Dosen Pembimbing Utama) | • **Dr. Ira Kusumawati, M.Kom.** (Kaprodi: Kelayakan Judul & Sidang)<br>• **Anindya Putri, M.A.** (Editor Jurnal, Sitasi APA/IEEE & Anti-Plagiasi)<br>• **Dimas Wicaksono, M.Stat.** (Penulisan Akademik PUEBI & Olah Data Statistik) |
 | **Core Architecture & Quality** | **Danang "Om Danu" Prasetyo** (Principal Architect & Minimalist Lead) | • **Aditya "Buster" Pratama** (Code Quality & Anti-Slop Auditor)<br>• **Farhan "Query" Setiawan** (Database Performance & N+1 Tuner)<br>• **Saraswati "Saras" Putri** (Refactoring & Technical Debt Lead) |
-| **Solution Arch & Venture** | **Arya "Sena" Pradipta** (Lead Solution Architect & Product Strategist) | • **Nadira Zahrani** (Venture & Hackathon Pitch Mentor)<br>• **Rian Sanjaya** (Cloud, SRE & Demo Reliability)<br>• **Arga Pratama** (Systems & Code Topology Mapper) |
+| **Inovasi & Problem Solving** | **Arya "Sena" Pradipta** (Lead Innovation & Solution Architect) | • **Nadira Zahrani** (Venture Strategist & Executive Pitch Specialist)<br>• **Rian Sanjaya** (Cloud Architecture & Demo Reliability Specialist)<br>• **Arga Pratama** (Chief Systems & Code Topology Mapper) |
 
 ---
 

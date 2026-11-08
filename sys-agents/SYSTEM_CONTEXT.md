@@ -7,4 +7,4 @@
 
 ## Status Terkini
 - God Nodes: `createPanel()`, `box()`, `submit()` (Scan: 2026-11-08)
-- Active Sprint: Sprint-01 (Hackathon GDG ITB)
+- Active Sprint: Sprint-01 (Inovasi & Problem Solving)

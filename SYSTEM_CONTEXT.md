@@ -6,8 +6,8 @@ Dokumen ini adalah **Single Source of Truth (Dokumen Jangkar)** yang dibaca oleh
 
 ## 1. Project Overview & Active Mission
 - **Nama Sistem:** Kantor AI (Virtual 3D Office Agent)
-- **Misi Aktif:** Persiapan Solusi Hackathon GDG di ITB (Case 2: Stronger Communities and Everyday Services)
-- **Problem Statement Utama:** Menghubungkan kebutuhan operasional komunitas lokal & organisasi kecil (aduan warga, antrean layanan, inventaris manual, jadwal relawan) dengan otomatisasi proses berbasis Google AI & Cloud tanpa hambatan adopsi (*zero-friction adoption*).
+- **Misi Aktif:** Solusi Inovasi & Problem Solving Berkelanjutan (Layanan Komunitas & Produktivitas Operasional)
+- **Problem Statement Utama:** Menghubungkan kebutuhan operasional komunitas lokal & organisasi kecil (aduan warga, antrean layanan, inventaris manual, jadwal relawan) dengan otomatisasi proses cerdas berbasis AI & Cloud tanpa hambatan adopsi (*zero-friction adoption*).
 - **Tech Stack:**
   - **Frontend:** Pure Three.js (prosedural 3D), Vanilla JavaScript, Vite, SSE Stream Reader.
   - **Backend:** Node.js (ESM), Express.js, Server-Sent Events (SSE), 9Router Gateway / Google Gemini API.
@@ -30,8 +30,8 @@ Dokumen ini adalah **Single Source of Truth (Dokumen Jangkar)** yang dibaca oleh
 
 ## 3. Active Development Focus & Decisions
 - **Fokus Sprint:**
-  1. Mengintegrasikan Kurva Proses Bisnis Komunitas dengan Teknologi AI Google (Dipimpin oleh Arya Sena).
-  2. Memastikan kesiapan demo 3 menit dan pertahanan tanya jawab dewan juri GDG ITB (Dipimpin oleh Nadira Zahrani).
+  1. Mengintegrasikan Kurva Proses Bisnis Komunitas dengan Arsitektur Teknologi Inovatif (Dipimpin oleh Arya Sena).
+  2. Memastikan kesiapan presentasi eksekutif 3 menit, kejelasan value proposition, dan pertahanan tanya jawab kritis (Dipimpin oleh Nadira Zahrani).
   3. Menjaga arsitektur kode tetap minimalis, anti-overengineering, dan berbasis fungsi standar bawaan/stdlib (Dipimpin oleh Danang "Om Danu" Prasetyo).
   4. Menghubungkan memori percakapan lintas divisi agar seluruh agen saling terkoordinasi.
 

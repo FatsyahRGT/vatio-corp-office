@@ -16,6 +16,7 @@ const SYSTEM_CONTEXT = resolve(SYS_DIR, 'SYSTEM_CONTEXT.md');
 
 const FINAL_MASTER_DOC = resolve(ROOT_DIR, 'FINAL_MASTER_DOC.md');
 const HACKATHON_DOC = resolve(ROOT_DIR, 'DOKUMEN_VALID_HACKATHON.md');
+const INOVASI_DOC = resolve(ROOT_DIR, 'DOKUMEN_MASTER_INOVASI.md');
 
 function extractDecisions(filePath) {
   if (!existsSync(filePath)) return [];
@@ -59,10 +60,10 @@ export function synthesizeAllDivisions() {
     generatedAt: `${dateStr}, ${timeStr} WIB`,
   };
 
-  const finalDoc = `# DOKUMEN VALID HACKATHON: Vatio Corp Master Synthesis
+  const finalDoc = `# DOKUMEN MASTER INOVASI & PROBLEM SOLVING: Vatio Corp Master Synthesis
 > **Single Source of Truth & Harmonized Cross-Division Decision Document**  
 > *Tanggal Terbit:* ${dateStr}, ${timeStr} WIB  
-> *Target Kasus:* GDG ITB Hackathon — Case 2: Stronger Communities and Everyday Services  
+> *Misi Inovasi:* Transformasi Layanan Komunitas & Produktivitas Operasional Modern  
 > *Sistem Notulen Pusat:* The Synthesis Engine (Vatio Corp Protocol)
 
 ---
@@ -82,7 +83,7 @@ Semua poin telah diselaraskan (*harmonized*) agar tidak terdapat gap antara kapa
 | Divisi & Penanggung Jawab | ID Keputusan | Intisari Konsensus | Status Validasi |
 | :--- | :--- | :--- | :--- |
 ${techDecisions.map((d) => `| ⚙️ **Teknis (Arga & Danu)** | \`${d.match(/\[(.*?)\]/)?.[1] || 'TECH'}\` | ${d.replace(/^-\s*\[.*?\]\s*/, '')} | ✅ Terverifikasi Topologi |`).join('\n')}
-${bizDecisions.map((d) => `| 💼 **Bisnis (Arya Sena)** | \`${d.match(/\[(.*?)\]/)?.[1] || 'BIZ'}\` | ${d.replace(/^-\s*\[.*?\]\s*/, '')} | ✅ Aligned Case 2 GDG |`).join('\n')}
+${bizDecisions.map((d) => `| 💼 **Bisnis (Arya Sena)** | \`${d.match(/\[(.*?)\]/)?.[1] || 'BIZ'}\` | ${d.replace(/^-\s*\[.*?\]\s*/, '')} | ✅ Aligned Inovasi & Problem Solving |`).join('\n')}
 ${ventureDecisions.map((d) => `| 🎯 **Venture (Nadira)** | \`${d.match(/\[(.*?)\]/)?.[1] || 'VENTURE'}\` | ${d.replace(/^-\s*\[.*?\]\s*/, '')} | ✅ Ready for Pitching |`).join('\n')}
 
 ---
@@ -115,7 +116,7 @@ ${bizDecisions.join('\n\n')}
 
 ${ventureDecisions.join('\n\n')}
 
-### Rencana Presentasi Juri (3 Menit):
+### Rencana Paparan Eksekutif (3 Menit):
 1. **Menit 1 (The Human Hook):** Ceritakan frustrasi nyata warga yang mengantre tanpa kepastian dan relawan yang mencatat manual.
 2. **Menit 2 (The Live Solution):** Tunjukkan alur kerja layanan komunitas yang berjalan mulus, cepat, dan transparan.
 3. **Menit 3 (The Social Scale):** Paparkan replikabilitas solusi ke ratusan komunitas lokal di Indonesia dengan biaya komputasi minimal.
@@ -126,15 +127,16 @@ ${ventureDecisions.join('\n\n')}
 
 - [x] Inisialisasi Tiered Memory & Protokol Notulen Pusat.
 - [x] Sinkronisasi Topologi Graphify dan Decoupled Architecture.
-- [ ] Finalisasi Prototipe Alur Layanan Komunitas (Case 2 GDG ITB).
-- [ ] Latihan Pitching & Q&A Juri bersama Nadira & Sena.
+- [ ] Finalisasi Prototipe Alur Layanan Komunitas & Efisiensi Operasional.
+- [ ] Latihan Pitching & Pertahanan Tanya Jawab bersama Nadira & Sena.
 
 ---
 *Dokumen ini sah dan terikat sebagai panduan tunggal seluruh divisi Vatio Corp.*
 `;
 
-  // Simpan ke FINAL_MASTER_DOC.md dan DOKUMEN_VALID_HACKATHON.md
+  // Simpan ke FINAL_MASTER_DOC.md, DOKUMEN_MASTER_INOVASI.md, dan DOKUMEN_VALID_HACKATHON.md
   writeFileSync(FINAL_MASTER_DOC, finalDoc, 'utf-8');
+  writeFileSync(INOVASI_DOC, finalDoc, 'utf-8');
   writeFileSync(HACKATHON_DOC, finalDoc, 'utf-8');
 
   console.log(`[Notulen Master] Notulensi telah diintegrasikan ke FINAL_MASTER_DOC.md (${stats.total} keputusan)`);

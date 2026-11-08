@@ -40,7 +40,7 @@ test('Session Manager: deleteAgentSession Mengosongkan Berkas Sesi Agen Tertentu
 });
 
 test('Session Manager: clearAllSessions Membersihkan Seluruh Berkas Sesi', () => {
-  saveAgentSession('nadira', 'Pitching GDG ITB');
+  saveAgentSession('nadira', 'Pitching Inovasi Problem Solving');
   saveAgentSession('rian', 'Task scheduling breakdown');
 
   const clearResult = clearAllSessions();

@@ -12,7 +12,7 @@ export const DIVISIONS = [
   { id: 'notulen', name: 'Notulen & Dokumen', short: 'Notulen', color: '#8b5cf6', row: 1, col: 2 },
   { id: 'academic', name: 'Akademisi & Riset', short: 'Akademik', color: '#6366f1', row: 2, col: 1 },
   { id: 'core', name: 'Core Architecture & Quality', short: 'Core Arch', color: '#10b981', row: 2, col: 0 },
-  { id: 'solution', name: 'Solution Arch & Venture', short: 'Solution', color: '#0ea5e9', row: 2, col: 2 },
+  { id: 'solution', name: 'Inovasi & Problem Solving', short: 'Inovasi', color: '#0ea5e9', row: 2, col: 2 },
 ];
 
 // look: skin = index SKIN, hair = warna, style = short | long | bun, glasses, hijab = warna
@@ -185,23 +185,23 @@ export const AGENTS = [
     ['Inventarisasi technical debt di modul ini', 'Refactor kelas monolit ini secara aman', 'Prioritaskan pelunasan utang teknis'], false,
     ['Technical Debt Audit', 'SOLID Refactoring', 'Monolith Deconstruction', 'Safe Code Modernization']),
 
-  // ---------- Solution Architecture & Venture Innovation ----------
-  A('sena', 'solution', 'Arya "Sena" Pradipta', 'M', 'Lead Solution Architect & Product Strategist', 'pertemuan kurva proses bisnis & teknologi, alur operasional As-Is vs To-Be, unit economics & token cost, kelayakan adopsi AI, privasi data warga/komunitas',
+  // ---------- Inovasi & Problem Solving ----------
+  A('sena', 'solution', 'Arya "Sena" Pradipta', 'M', 'Lead Innovation & Solution Architect', 'pertemuan kurva proses bisnis & teknologi terapan, alur operasional As-Is vs To-Be, unit economics & token cost, validasi problem-solution fit, alur layanan zero-friction',
     { skin: 2, hair: '#1c1c1c', style: 'short', glasses: true },
-    ['Petakan proses bisnis manual ke solusi AI', 'Hitung feasibility & token economics solusi ini', 'Rancang alur operasional tanpa gesekan (zero-friction)'], true,
-    ['Business-Tech Convergence', 'Operational Workflow Design', 'Unit Economics & Feasibility', 'Community Data Privacy']),
-  A('nadira', 'solution', 'Nadira Zahrani', 'F', 'Venture & Hackathon Pitch Mentor', 'strategi kompetisi hackathon (GDG/Google Tech), problem-solution fit, formulasi Why Now & Why Google Tech, alur demo 3 menit, narasi dampak sosial terukur',
+    ['Petakan proses manual ke solusi inovasi terpadu', 'Hitung kelayakan & token economics solusi ini', 'Rancang alur operasional tanpa gesekan (zero-friction)'], true,
+    ['Business-Tech Convergence', 'Operational Workflow Design', 'Unit Economics & Feasibility', 'Problem-Solution Fit Validation']),
+  A('nadira', 'solution', 'Nadira Zahrani', 'F', 'Venture Strategist & Executive Pitch Specialist', 'strategi validasi problem-solution fit, formulasi Why Now & diferensiasi solusi, koreografi presentasi 3 menit, narasi value proposition terukur, pertahanan Q&A kritis',
     { skin: 1, hair: '#2b1d16', style: 'long', hijab: '#bae6fd' },
-    ['Review pitch deck & problem statement hackathon', 'Susun narasi Why Now & Why Google AI', 'Rancang skenario live demo 3 menit yang memukau'], false,
-    ['Hackathon Judging Strategy', '3-Minute Live Demo Flow', 'Value Proposition & Impact', 'Problem-Solution Framing']),
-  A('rian', 'solution', 'Rian Sanjaya', 'M', 'Cloud, SRE & Demo Reliability', 'infrastruktur demo hackathon, latensi rendah, caching Redis, serverless Google Cloud / VPS, pencegahan down/OOM saat live judging',
+    ['Review problem statement & value proposition solusi', 'Susun narasi Why Now & diferensiasi teknologi', 'Rancang koreografi presentasi 3 menit & live demo'], false,
+    ['Executive Pitching & Storytelling', '3-Minute Live Demo Flow', 'Value Proposition & Impact', 'Critical Q&A Defense']),
+  A('rian', 'solution', 'Rian Sanjaya', 'M', 'Cloud Architecture & Demo Reliability Specialist', 'infrastruktur sistem andal berlatensi ultra-rendah, caching Redis, serverless Google Cloud / VPS hemat biaya, failover otomatis, jaminan demo stabil tanpa downtime',
     { skin: 3, hair: '#1c1c1c', style: 'short' },
-    ['Pastikan demo hackathon anti-down & cepat', 'Setup caching & optimasi response time', 'Rancang arsitektur deployment VPS/GCP murah'], false,
+    ['Pastikan sistem demo responsif, stabil & anti-crash', 'Setup caching & optimasi response time ultra-cepat', 'Rancang arsitektur deployment VPS/GCP murah'], false,
     ['Demo Reliability & SRE', 'Latency Optimization', 'VPS & Cloud Infrastructure', 'Failover & Zero-Downtime']),
-  A('arga', 'solution', 'Arga Pratama', 'M', 'Systems & Code Topology Mapper', 'pemetaan topologi kode (Graphify style), relasi dependensi modul, deteksi god nodes, integrasi API & aliran data antar sistem',
+  A('arga', 'solution', 'Arga Pratama', 'M', 'Chief Systems & Code Topology Mapper', 'pemetaan topologi kode (Graphify style), relasi dependensi modul, deteksi & eliminasi god nodes, orkestrasi integrasi API & aliran data antar sistem',
     { skin: 2, hair: '#2b2118', style: 'short', glasses: true },
     ['Petakan keterkaitan arsitektur sistem ini', 'Identifikasi god nodes & circular dependency', 'Visualisasikan data flow antar service'], false,
-    ['Code Topology Mapping', 'Dependency Architecture', 'System Integration Flow', 'Bottleneck Identification']),
+    ['Code Topology Mapping', 'Dependency Architecture', 'System Integration Flow', 'Bottleneck & God Node Elimination']),
 ];
 
 export const agentById = (id) => AGENTS.find((a) => a.id === id);

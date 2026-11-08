@@ -269,7 +269,7 @@ export function synthesizeNotulen() {
     `| Divisi | ID | Status |\n` +
     `| :--- | :--- | :--- |\n` +
     `| ⚙️ Teknis (Arga & Danu) | \`TECH-DEC-01..03\` | ✅ Terverifikasi Topologi |\n` +
-    `| 💼 Bisnis (Arya Sena) | \`BIZ-DEC-01..03\` | ✅ Aligned Case 2 GDG ITB |\n` +
+    `| 💼 Bisnis (Arya Sena) | \`BIZ-DEC-01..03\` | ✅ Aligned Inovasi & Problem Solving |\n` +
     `| 🎯 Venture (Nadira) | \`VENTURE-DEC-01..03\` | ✅ Ready for Pitching |\n\n` +
     `> 💡 *Buka file \`FINAL_MASTER_DOC.md\` untuk melihat dokumen utuh dengan Executive Summary, Matriks Harmonisasi, Feasibility Anti-Slop, dan Action Items.*`;
 }

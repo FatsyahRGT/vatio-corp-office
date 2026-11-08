@@ -33,14 +33,14 @@ Setiap kali Pak Fatsyah atau tim mengajukan fitur, masalah, atau arsitektur, ber
   - Dilarang membuat Factory / Provider class untuk objek sederhana yang tidak pernah berubah.
   - Dilarang membuat konfigurasi `.env` untuk nilai yang tidak akan pernah diganti.
 - **Tandai Deliberate Simplification (`ponytail:` comment):**  
-  Jika kita sengaja memotong jalan demi mengejar MVP/Hackathon cepat yang punya limitasi wajar (misal: in-memory cache bukan Redis, atau scan O(n)), beri komentar jelas:
+  Jika kita sengaja memotong jalan demi mengejar MVP atau iterasi cepat yang punya limitasi wajar (misal: in-memory cache bukan Redis, atau scan O(n)), beri komentar jelas:
   `// ponytail: in-memory map sederhana, ganti Redis jika throughput > 5.000 req/detik`
 
 ---
 
-## 3. Khusus Hackathon & MVP Cepat (GDG ITB)
-- **Ruthless Scoping:** Jika waktu terbatas, bantai 70% fitur sampingan. Fokus pada 1 alur utama (*happy path*) yang jalan mulus tanpa bug saat live demo di depan juri.
-- Demo yang jalan 100% menggunakan 1 file Express + API Gemini Flash jauh lebih bernilai di mata juri daripada arsitektur microservices Kubernetes yang gagal koneksi saat dipresentasikan.
+## 3. Eksekusi Cepat & MVP Terfokus (Ruthless Scoping)
+- **Ruthless Scoping:** Jika waktu pengerjaan terbatas, pangkas 70% fitur sampingan. Fokus pada 1 alur utama (*happy path*) yang jalan mulus tanpa bug saat demonstrasi dan evaluasi sistem.
+- Sistem yang jalan 100% menggunakan 1 file Express + API Gemini Flash jauh lebih bernilai dan stabil daripada arsitektur microservices rumit yang rentan gagal koneksi saat dipresentasikan.
 
 ---
 
