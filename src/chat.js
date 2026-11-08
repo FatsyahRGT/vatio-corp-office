@@ -1,4 +1,5 @@
 // Klien chat: simpan riwayat per karyawan (localStorage, opsional) dan baca stream SSE dari /api/chat.
+import { agentById, divisionById } from '../shared/roster.js';
 
 const KEY_HISTORY = 'kantorai.history.v1';
 const KEY_CODE = 'kantorai.code';
@@ -49,13 +50,48 @@ export async function fetchConfig() {
 
 // Mengirim riwayat + pesan baru. Memanggil onText(potongan) saat streaming.
 // Melempar Error dengan .code === 401 bila kode akses salah.
-export async function streamChat(agentId, messages, { onText, signal, participantIds }) {
+export function getCrossDivisionContext(currentId, maxDivisions = 4) {
+  const result = [];
+  const entries = Object.entries(histories).filter(([id, msgs]) => id !== currentId && Array.isArray(msgs) && msgs.length > 0);
+
+  for (const [otherId, msgs] of entries) {
+    let name = 'Karyawan';
+    let role = 'Divisi Lain';
+    if (otherId === 'meeting') {
+      name = 'Ruang Rapat Bersama Pak Fatsyah';
+      role = 'Group Meeting';
+    } else {
+      const a = agentById(otherId);
+      if (a) {
+        const d = divisionById(a.division);
+        name = a.name;
+        role = `${a.role} · Divisi ${d?.name || a.division}`;
+      }
+    }
+
+    const recent = msgs.slice(-2);
+    const snippet = recent
+      .map((m) => `${m.role === 'user' ? 'Pak Fatsyah' : name}: ${m.content.slice(0, 350)}`)
+      .join('\n');
+
+    result.push({
+      id: otherId,
+      name,
+      role,
+      snippet,
+    });
+  }
+
+  return result.slice(-maxDivisions);
+}
+
+export async function streamChat(agentId, messages, { onText, signal, participantIds, crossContext }) {
   let res;
   try {
     res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-access-code': getCode() },
-      body: JSON.stringify({ agentId, messages, participantIds }),
+      body: JSON.stringify({ agentId, messages, participantIds, crossContext }),
       signal,
     });
   } catch (e) {

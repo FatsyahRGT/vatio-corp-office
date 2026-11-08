@@ -1,5 +1,6 @@
 import { AGENTS, agentsOf, divisionById } from '../shared/roster.js';
 import { getSkillForAgent } from './skills.js';
+import { getSystemContext } from './context.js';
 
 const BASE = `Kamu adalah anggota tim AI di Vatio Corp, bagian dari Innovation Technology Corporation, perusahaan teknologi Indonesia yang mengembangkan aplikasi web (Laravel, JavaScript/React/Vue), aplikasi mobile (Flutter), layanan analisis produk dan data, orkestrasi notulensi & ekspor dokumen, serta pendampingan akademik riset/skripsi.
 
@@ -26,9 +27,11 @@ const DIVISION_BRIEF = {
   bizdata: 'Divisi Bisnis & Data: menganalisis model bisnis, data, pasar, dan kompetitor untuk menghasilkan insight yang bisa ditindaklanjuti. Meliputi analisis bisnis, KPI, data analysis (SQL, dashboard, visualisasi), data engineering (ETL, warehouse), serta riset pasar & kompetitor. Hitung hanya dari data yang diberikan dan tunjukkan perhitungan untuk angka turunan.',
   notulen: 'Divisi Notulen & Dokumen: bertindak sebagai orkestrator dan sekretariat eksekutif yang merangkum hasil diskusi antar divisi menjadi dokumen kerja formal yang siap diekspor ke Word (.doc), Excel (.csv/tabel), atau PDF. Meliputi penyusunan notulensi rapat, action items, executive summary, breakdown tabel biaya/timeline, serta perapihan format laporan. Sajikan selalu output yang sangat terstruktur, memakai heading, bullet points, dan tabel Markdown yang rapi agar langsung bisa diekspor pengguna.',
   academic: 'Divisi Akademisi & Riset: mendampingi dan membimbing mahasiswa semester akhir dalam menyelesaikan skripsi, tugas akhir, atau publikasi jurnal ilmiah. Meliputi evaluasi judul oleh Kaprodi, bimbingan substansi Bab 1-5 oleh Dosen Pembimbing, penelusuran referensi dan parafrase anti-plagiasi oleh Editor Literatur, serta perancangan metodologi riset dan interpretasi olah data. Berikan masukan akademik yang kritis, standar ilmiah tinggi, etis, dan solutif.',
+  core: 'Divisi Core Architecture & Code Quality: dipimpin oleh Danang "Om Danu" Prasetyo. Bertugas menjaga standar teknis tertinggi dengan prinsip minimalisme radikal, anti-overengineering, dan YAGNI. Mengaudit kode dari AI-slop, mengeliminasi boilerplate yang tidak perlu, menuntaskan masalah query database (N+1), dan melunasi utang teknis (technical debt). Berikan rekomendasi yang tajam, solutif, ringkas, dan mengutamakan fungsi bawaan bahasa (stdlib/native) daripada menambah ketergantungan library luar.',
+  solution: 'Divisi Solution Architecture & Venture Innovation: menjembatani kebutuhan proses bisnis nyata (termasuk komunitas, UMKM, dan organisasi lokal) dengan kurva adopsi teknologi terapan (Google AI, Cloud, dan modern web/mobile). Dipimpin oleh Arya Sena Pradipta dan didampingi mentor hackathon Nadira Zahrani, divisi ini merumuskan alur operasional As-Is vs To-Be, memastikan kelayakan unit economics dan privasi data, serta menyusun strategi solusi inovatif yang siap diuji di hadapan dewan juri kompetisi teknologi.',
 };
 
-export function buildSystemPrompt(agent) {
+export function buildSystemPrompt(agent, { crossContext = [] } = {}) {
   const div = divisionById(agent.division);
   const mates = agentsOf(agent.division).filter((a) => a.id !== agent.id);
   const lines = [
@@ -48,6 +51,28 @@ export function buildSystemPrompt(agent) {
     DIVISION_BRIEF[agent.division] || '',
   ];
 
+  // Sisipkan Dokumen Jangkar SYSTEM_CONTEXT.md bila ada
+  const sysContext = getSystemContext();
+  if (sysContext) {
+    lines.push('', '=== DOKUMEN JANGKAR SISTEM (SYSTEM_CONTEXT.MD) ===', sysContext);
+  }
+
+  // Sisipkan Memori Percakapan Lintas Divisi bila ada
+  if (Array.isArray(crossContext) && crossContext.length > 0) {
+    lines.push(
+      '',
+      '=== MEMORI PERCAKAPAN LINTAS DIVISI TERAKHIR (SHARED OFFICE MEMORY) ===',
+      'Pak Fatsyah baru saja berdiskusi dengan rekan divisi lain di kantor mengenai topik berikut:',
+      ...crossContext.map((c) => `[Sesi dengan ${c.name} (${c.role})]:
+${c.snippet}`),
+      '',
+      'INSTRUKSI MEMORI LINTAS DIVISI:',
+      '- Pahami dan ingat konteks di atas sebagai pengetahuan bersama perusahaan.',
+      '- JANGAN meminta Pak Fatsyah mengulang penjelasan atau konteks yang sudah jelas dibahas dengan divisi lain.',
+      '- Hubungkan analisismu secara harmonis dengan keputusan atau poin yang sudah disepakati di divisi lain.'
+    );
+  }
+
   if (agent.leader) {
     lines.push('', `Peran khusus Leader:`, LEADER_EXTRA);
   }
@@ -61,7 +86,7 @@ export function buildSystemPrompt(agent) {
   return lines.join('\n');
 }
 
-export function buildMeetingPrompt(agent, allParticipants) {
+export function buildMeetingPrompt(agent, allParticipants, { crossContext = [] } = {}) {
   const div = divisionById(agent.division);
   const others = (allParticipants || []).filter((a) => a.id !== agent.id);
   const othersList = others.map((a) => `- ${a.name} (${a.role} · ${divisionById(a.division).name})`).join('\n');
@@ -87,6 +112,20 @@ export function buildMeetingPrompt(agent, allParticipants) {
   const skillContent = getSkillForAgent(agent);
   if (skillContent) {
     lines.push('', `KEAHLIAN SPESIALISMU (${agent.name}):`, skillContent);
+  }
+
+  const sysContext = getSystemContext();
+  if (sysContext) {
+    lines.push('', '=== DOKUMEN JANGKAR SISTEM (SYSTEM_CONTEXT.MD) ===', sysContext);
+  }
+
+  if (Array.isArray(crossContext) && crossContext.length > 0) {
+    lines.push(
+      '',
+      '=== MEMORI PERCAKAPAN LINTAS DIVISI (SHARED OFFICE MEMORY) ===',
+      ...crossContext.map((c) => `[Sesi dengan ${c.name} (${c.role})]:
+${c.snippet}`)
+    );
   }
 
   return lines.join('\n');

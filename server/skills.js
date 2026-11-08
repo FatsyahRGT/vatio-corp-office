@@ -30,6 +30,18 @@ const AGENT_SKILL_MAP = {
   js: 'javascript/frontend-architecture.md',
   mobile: 'mobile/flutter-architecture.md',
   bizdata: 'bizdata/business-and-data.md',
+  // Core Architecture & Code Quality
+  danu: 'core/ponytail-minimalist.md',
+  aditya: 'core/code-slop-detector.md',
+  farhan: 'core/database-performance.md',
+  saras: 'core/clean-code-and-debt.md',
+  core: 'core/ponytail-minimalist.md',
+  // Solution Architecture & Venture Innovation
+  sena: 'solution/business-tech-convergence.md',
+  nadira: 'solution/venture-hackathon-pitch.md',
+  rian: 'solution/system-performance-sre.md',
+  arga: 'solution/code-topology-graphify.md',
+  solution: 'solution/business-tech-convergence.md',
 };
 
 const cache = new Map();

@@ -114,6 +114,8 @@ function buildDivisionRoom(div, scene, chars) {
     bizdata: '#c8f3ee',
     notulen: '#edd9ff',
     academic: '#c7d2fe',
+    core: '#a7f3d0',
+    solution: '#bae6fd',
   };
   const lc = glowColors[div.id] || '#8ec5ff';
 
@@ -180,6 +182,14 @@ function buildDivisionRoom(div, scene, chars) {
       place(inner, F.bookshelf(2.2, 2.1), 3.5, 0, wallZ + 0.1);
       break;
     case 'bizdata':
+      place(inner, F.chartWall(3.6, 1.9), -2.8, 1.75, -ROOM_D / 2 + 0.06);
+      place(inner, F.bookshelf(2.2, 2.1), 3.5, 0, wallZ + 0.1);
+      break;
+    case 'core':
+      place(inner, F.serverRack(), 3.9, 0, -3.2);
+      place(inner, F.whiteboard(2.6, 1.3), -3.3, 1.75, -ROOM_D / 2 + 0.06);
+      break;
+    case 'solution':
       place(inner, F.chartWall(3.6, 1.9), -2.8, 1.75, -ROOM_D / 2 + 0.06);
       place(inner, F.bookshelf(2.2, 2.1), 3.5, 0, wallZ + 0.1);
       break;

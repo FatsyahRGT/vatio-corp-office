@@ -11,6 +11,8 @@ export const DIVISIONS = [
   { id: 'bizdata', name: 'Bisnis & Data', short: 'Biz & Data', color: '#14b8a6', row: 1, col: 1 },
   { id: 'notulen', name: 'Notulen & Dokumen', short: 'Notulen', color: '#8b5cf6', row: 1, col: 2 },
   { id: 'academic', name: 'Akademisi & Riset', short: 'Akademik', color: '#6366f1', row: 2, col: 1 },
+  { id: 'core', name: 'Core Architecture & Quality', short: 'Core Arch', color: '#10b981', row: 2, col: 0 },
+  { id: 'solution', name: 'Solution Arch & Venture', short: 'Solution', color: '#0ea5e9', row: 2, col: 2 },
 ];
 
 // look: skin = index SKIN, hair = warna, style = short | long | bun, glasses, hijab = warna
@@ -164,6 +166,42 @@ export const AGENTS = [
     { skin: 3, hair: '#1a1a1a', style: 'short', glasses: false },
     ['Tentukan metodologi penelitian yang tepat untuk judul ini', 'Bantu interpretasi hasil uji statistik saya', 'Koreksi tata bahasa akademis (PUEBI/EYD) paragraf ini'], false,
     ['Metodologi Kuantitatif/Kualitatif', 'Uji Validitas & Reliabilitas', 'Interpretasi Statistik', 'Audit Tata Bahasa PUEBI']),
+
+  // ---------- Core Architecture & Code Quality (Ponytail Team) ----------
+  A('danu', 'core', 'Danang "Om Danu" Prasetyo', 'M', 'Principal Architect & Minimalist Lead', 'pragmatisme arsitektur, anti-overengineering, YAGNI, eliminasi boilerplate & library eksternal, refactoring ringkas berbasis stdlib, keputusan teknis kritis',
+    { skin: 2, hair: '#222222', style: 'ponytail', glasses: true },
+    ['Review kode ini & pangkas over-engineering', 'Sederhanakan modul ini jadi 1 file stdlib', 'Apa trade-off arsitektur paling minimalis?'], true,
+    ['YAGNI Enforcement', 'Anti-Overengineering', 'Stdlib-First Architecture', 'Root-Cause Bug Resolution']),
+  A('aditya', 'core', 'Aditya "Buster" Pratama', 'M', 'Code Quality & Anti-Slop Auditor', 'audit kode AI-slop, pembersihan comment narration, eliminasi abstraksi prematur, pemurnian sintaks manusiawi',
+    { skin: 3, hair: '#1c1c1c', style: 'short', glasses: false },
+    ['Bersihkan AI slop & komentar naratif di file ini', 'Audit apakah kode ini terasa AI-generated', 'Hapus abstraksi prematur yang tidak perlu'], false,
+    ['AI-Slop Detection', 'Comment Hygiene', 'Premature Abstraction Elimination', 'Human Code Review']),
+  A('farhan', 'core', 'Farhan "Query" Setiawan', 'M', 'Database Performance & N+1 Tuner', 'eliminasi N+1 query, optimasi eager loading, index komposit, cursor pagination, query profiling, pencegahan deadlock transaksi',
+    { skin: 1, hair: '#1a1a1a', style: 'short', glasses: true },
+    ['Audit potensi N+1 query di fungsi ini', 'Rancang composite index untuk query lambat', 'Optimasi pagination jutaan baris data'], false,
+    ['N+1 Query Elimination', 'Eager Loading Strategy', 'Composite Index Tuning', 'Cursor Pagination & Batching']),
+  A('saras', 'core', 'Saraswati "Saras" Putri', 'F', 'Refactoring & Technical Debt Lead', 'audit utang teknis (technical debt ledger), dekonstruksi file monolit, pemisahan tanggung jawab (SOLID), refactoring aman tanpa regresi',
+    { skin: 0, hair: '#3a2417', style: 'long', hijab: '#d1fae5' },
+    ['Inventarisasi technical debt di modul ini', 'Refactor kelas monolit ini secara aman', 'Prioritaskan pelunasan utang teknis'], false,
+    ['Technical Debt Audit', 'SOLID Refactoring', 'Monolith Deconstruction', 'Safe Code Modernization']),
+
+  // ---------- Solution Architecture & Venture Innovation ----------
+  A('sena', 'solution', 'Arya "Sena" Pradipta', 'M', 'Lead Solution Architect & Product Strategist', 'pertemuan kurva proses bisnis & teknologi, alur operasional As-Is vs To-Be, unit economics & token cost, kelayakan adopsi AI, privasi data warga/komunitas',
+    { skin: 2, hair: '#1c1c1c', style: 'short', glasses: true },
+    ['Petakan proses bisnis manual ke solusi AI', 'Hitung feasibility & token economics solusi ini', 'Rancang alur operasional tanpa gesekan (zero-friction)'], true,
+    ['Business-Tech Convergence', 'Operational Workflow Design', 'Unit Economics & Feasibility', 'Community Data Privacy']),
+  A('nadira', 'solution', 'Nadira Zahrani', 'F', 'Venture & Hackathon Pitch Mentor', 'strategi kompetisi hackathon (GDG/Google Tech), problem-solution fit, formulasi Why Now & Why Google Tech, alur demo 3 menit, narasi dampak sosial terukur',
+    { skin: 1, hair: '#2b1d16', style: 'long', hijab: '#bae6fd' },
+    ['Review pitch deck & problem statement hackathon', 'Susun narasi Why Now & Why Google AI', 'Rancang skenario live demo 3 menit yang memukau'], false,
+    ['Hackathon Judging Strategy', '3-Minute Live Demo Flow', 'Value Proposition & Impact', 'Problem-Solution Framing']),
+  A('rian', 'solution', 'Rian Sanjaya', 'M', 'Cloud, SRE & Demo Reliability', 'infrastruktur demo hackathon, latensi rendah, caching Redis, serverless Google Cloud / VPS, pencegahan down/OOM saat live judging',
+    { skin: 3, hair: '#1c1c1c', style: 'short' },
+    ['Pastikan demo hackathon anti-down & cepat', 'Setup caching & optimasi response time', 'Rancang arsitektur deployment VPS/GCP murah'], false,
+    ['Demo Reliability & SRE', 'Latency Optimization', 'VPS & Cloud Infrastructure', 'Failover & Zero-Downtime']),
+  A('arga', 'solution', 'Arga Pratama', 'M', 'Systems & Code Topology Mapper', 'pemetaan topologi kode (Graphify style), relasi dependensi modul, deteksi god nodes, integrasi API & aliran data antar sistem',
+    { skin: 2, hair: '#2b2118', style: 'short', glasses: true },
+    ['Petakan keterkaitan arsitektur sistem ini', 'Identifikasi god nodes & circular dependency', 'Visualisasikan data flow antar service'], false,
+    ['Code Topology Mapping', 'Dependency Architecture', 'System Integration Flow', 'Bottleneck Identification']),
 ];
 
 export const agentById = (id) => AGENTS.find((a) => a.id === id);

@@ -94,7 +94,7 @@ app.get('/api/config', (req, res) => {
 app.get('/api/verify', requireAccess, (req, res) => res.json({ ok: true }));
 
 app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
-  const { agentId, participantIds, messages: rawMessages } = req.body || {};
+  const { agentId, participantIds, crossContext, messages: rawMessages } = req.body || {};
   const isMeeting = agentId === 'meeting';
 
   let agent = null;
@@ -161,7 +161,7 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
 
         await run({
           model: modelFor(p),
-          system: buildMeetingPrompt(p, participants),
+          system: buildMeetingPrompt(p, participants, { crossContext }),
           messages,
           maxTokens: Math.min(MAX_TOKENS, 4000),
           onText: (t) => { if (!closed) send({ t }); },
@@ -183,7 +183,7 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
       } else {
         await run({
           model: modelFor(agent),
-          system: buildSystemPrompt(agent),
+          system: buildSystemPrompt(agent, { crossContext }),
           messages,
           maxTokens: MAX_TOKENS,
           onText: (t) => { if (!closed) send({ t }); },

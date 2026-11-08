@@ -46,6 +46,11 @@ function buildHair(head, look, hairColor) {
     hair.add(box(0.07, 0.3, 0.3, hairColor, -0.245, 0.3, -0.05));
   } else if (look.style === 'bun') {
     hair.add(box(0.2, 0.2, 0.2, hairColor, 0, 0.64, -0.12));
+  } else if (look.style === 'ponytail') {
+    hair.add(box(0.07, 0.2, 0.3, hairColor, 0.245, 0.34, -0.05));
+    hair.add(box(0.07, 0.2, 0.3, hairColor, -0.245, 0.34, -0.05));
+    hair.add(box(0.12, 0.12, 0.08, '#e11d48', 0, 0.35, -0.28));
+    hair.add(box(0.12, 0.38, 0.1, hairColor, 0, 0.18, -0.31));
   } else {
     hair.add(box(0.07, 0.2, 0.3, hairColor, 0.245, 0.34, -0.05));
     hair.add(box(0.07, 0.2, 0.3, hairColor, -0.245, 0.34, -0.05));

@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import { AGENTS, DIVISIONS, agentById, agentsOf, divisionById, allLeaders } from '../shared/roster.js';
 import { renderMarkdown } from './md.js';
-import { getHistory, setHistory, clearHistory, clearAllHistory, streamChat } from './chat.js';
+import { getHistory, setHistory, clearHistory, clearAllHistory, streamChat, getCrossDivisionContext } from './chat.js';
 
 const $ = (id) => document.getElementById(id);
 const initials = (name) => name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase();
@@ -875,6 +875,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       const full = await streamChat(id, sent, {
         signal: l.abort.signal,
         participantIds: id === 'meeting' ? responseTargets : undefined,
+        crossContext: getCrossDivisionContext(id),
         onText: (_t, all) => {
           l.text = all;
           if (!l.raf) {

@@ -1,8 +1,8 @@
 {
   "package.json": {
-    "mtime": 1793984631.8340993,
-    "seen": 1793985266.153264,
-    "ast_hash": "e04afaea7b4b2dec0582cf049a04e442",
+    "mtime": 1794113040.1475194,
+    "seen": 1794113107.073555,
+    "ast_hash": "60a1d0afa8fadf0869d6f543cd05d359",
     "semantic_hash": ""
   },
   "server/delegate.js": {
@@ -12,33 +12,33 @@
     "semantic_hash": ""
   },
   "server/index.js": {
-    "mtime": 1793986673.593242,
-    "seen": 1793988322.7304735,
-    "ast_hash": "8cf99028d3e7d1eb2925ab6d8c8d2957",
+    "mtime": 1794112734.6483183,
+    "seen": 1794112916.8014088,
+    "ast_hash": "e3e53cc493685a9f0cecd794e16906a9",
     "semantic_hash": ""
   },
   "server/prompts.js": {
-    "mtime": 1793986606.561016,
-    "seen": 1793988322.7304735,
-    "ast_hash": "e0422ef75ede7571aa9443a103db548f",
+    "mtime": 1794112709.741651,
+    "seen": 1794112916.8014088,
+    "ast_hash": "bf2688981abba7e4bc757082eb1f0a8b",
     "semantic_hash": ""
   },
   "shared/roster.js": {
-    "mtime": 1793986570.835565,
-    "seen": 1793988322.7304735,
-    "ast_hash": "980eaa13f9f23bd4be308552f0951e60",
+    "mtime": 1794111679.9862049,
+    "seen": 1794112002.7738724,
+    "ast_hash": "000ec52402d3fa1881b8a9f65fb8d753",
     "semantic_hash": ""
   },
   "src/character.js": {
-    "mtime": 1793956365.0184934,
-    "seen": 1793964143.2127025,
-    "ast_hash": "62e0261cc47835b12415a9ad927fcf0e",
-    "semantic_hash": "62e0261cc47835b12415a9ad927fcf0e"
+    "mtime": 1794111760.6338408,
+    "seen": 1794112002.7738724,
+    "ast_hash": "6da3308f6f3c45e1843a684d87328cc7",
+    "semantic_hash": ""
   },
   "src/chat.js": {
-    "mtime": 1793986712.4538977,
-    "seen": 1793988322.7304735,
-    "ast_hash": "77b1fe339b9f0b5720fc8f2701baa829",
+    "mtime": 1794112764.1116474,
+    "seen": 1794112916.8014088,
+    "ast_hash": "3cebd07e893dc40975cfe0eda779a273",
     "semantic_hash": ""
   },
   "src/furniture.js": {
@@ -60,15 +60,15 @@
     "semantic_hash": ""
   },
   "src/office.js": {
-    "mtime": 1793981846.622777,
-    "seen": 1793985266.153264,
-    "ast_hash": "b0ae27cb14990971132ee6efdda80f24",
+    "mtime": 1794111775.2499075,
+    "seen": 1794112002.7738724,
+    "ast_hash": "a2cd3a0230a602a97ab9c37dc7e4718c",
     "semantic_hash": ""
   },
   "src/panel.js": {
-    "mtime": 1793991913.2683623,
-    "seen": 1793992236.4523315,
-    "ast_hash": "5ec7075ffdb7c016bedbf9b45fa7daa0",
+    "mtime": 1794112672.6615713,
+    "seen": 1794112916.8014088,
+    "ast_hash": "1f9a7d8a822ffcc66a6d83e758c475e2",
     "semantic_hash": ""
   },
   "src/stage.js": {
@@ -96,21 +96,21 @@
     "semantic_hash": ""
   },
   "server/skills.js": {
-    "mtime": 1793986414.0643327,
-    "seen": 1793988322.7304735,
-    "ast_hash": "1386f782d7ae643f846f351a3b92d823",
+    "mtime": 1794111646.2582848,
+    "seen": 1794112002.7738724,
+    "ast_hash": "aa0cd4523aa6f80bfd85a88b225873a6",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793988253.5980134,
-    "seen": 1793988322.7304735,
-    "ast_hash": "c9bcccd648adbec89958170a8037833d",
+    "mtime": 1794111877.3911624,
+    "seen": 1794112002.7738724,
+    "ast_hash": "f920f10f140ac0f28cce586b2a49cce5",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1793991283.8571448,
-    "seen": 1793992236.4523315,
-    "ast_hash": "ac39eec79ece8a2793973635763471ee",
+    "mtime": 1794111837.0420625,
+    "seen": 1794112002.7738724,
+    "ast_hash": "c958b2cb8235f107d22f5d56ca67119d",
     "semantic_hash": ""
   },
   "skills/academic/dosen-pembimbing.md": {
@@ -225,6 +225,90 @@
     "mtime": 1793986353.4369702,
     "seen": 1793988322.7304735,
     "ast_hash": "ae9db22abbdd940cd33ccf826dc6e7a3",
+    "semantic_hash": ""
+  },
+  "skills/core/clean-code-and-debt.md": {
+    "mtime": 1794111590.460396,
+    "seen": 1794112002.7738724,
+    "ast_hash": "720ff083693d4a497250d0a7be8ea34e",
+    "semantic_hash": ""
+  },
+  "skills/core/code-slop-detector.md": {
+    "mtime": 1794111571.9500043,
+    "seen": 1794112002.7738724,
+    "ast_hash": "e260937504667d7bcba936b85a08a0f0",
+    "semantic_hash": ""
+  },
+  "skills/core/database-performance.md": {
+    "mtime": 1794111581.9431782,
+    "seen": 1794112002.7738724,
+    "ast_hash": "972e05def4ff7ef9faf14d7963bf8858",
+    "semantic_hash": ""
+  },
+  "skills/core/ponytail-minimalist.md": {
+    "mtime": 1794111561.5815756,
+    "seen": 1794112002.7738724,
+    "ast_hash": "dc48c09048ad9591724f4e59b79dc063",
+    "semantic_hash": ""
+  },
+  "skills/solution/business-tech-convergence.md": {
+    "mtime": 1794112096.0631804,
+    "seen": 1794112916.8014088,
+    "ast_hash": "e0ba53acf1ac0b7ffa1b19ab67b17605",
+    "semantic_hash": ""
+  },
+  "skills/solution/code-topology-graphify.md": {
+    "mtime": 1794111631.0944245,
+    "seen": 1794112002.7738724,
+    "ast_hash": "15d40ab4d1eadea3a59a5712281d8d73",
+    "semantic_hash": ""
+  },
+  "skills/solution/system-performance-sre.md": {
+    "mtime": 1794111621.1288147,
+    "seen": 1794112002.7738724,
+    "ast_hash": "ba8a17a65a88279deb96a4050a6ed430",
+    "semantic_hash": ""
+  },
+  "skills/solution/venture-hackathon-pitch.md": {
+    "mtime": 1794112122.0682445,
+    "seen": 1794112916.8014088,
+    "ast_hash": "f34ad5fd120dc44a1c201b3d3cdab2e3",
+    "semantic_hash": ""
+  },
+  "scripts/sync-context.js": {
+    "mtime": 1794112578.9331274,
+    "seen": 1794112916.8014088,
+    "ast_hash": "8952ade9c5d3879576a4974ad44236bc",
+    "semantic_hash": ""
+  },
+  "server/context.js": {
+    "mtime": 1794112634.5219204,
+    "seen": 1794112916.8014088,
+    "ast_hash": "08293141db9239157d9b54b3e8c27fdc",
+    "semantic_hash": ""
+  },
+  "SYSTEM_CONTEXT.md": {
+    "mtime": 1794113073.9471817,
+    "seen": 1794113107.073555,
+    "ast_hash": "15d63c1a1c62fed45760f9ecccf79ed1",
+    "semantic_hash": ""
+  },
+  "test/context-sync.test.js": {
+    "mtime": 1794113021.8430295,
+    "seen": 1794113107.073555,
+    "ast_hash": "1326aab6a55c551a06a6dc23cca23a3d",
+    "semantic_hash": ""
+  },
+  "test/prompts-and-skills.test.js": {
+    "mtime": 1794113063.7211492,
+    "seen": 1794113107.073555,
+    "ast_hash": "a9619ccb022c3f8996291890ac59a1cc",
+    "semantic_hash": ""
+  },
+  "test/roster.test.js": {
+    "mtime": 1794112984.9183118,
+    "seen": 1794113107.073555,
+    "ast_hash": "c9762d600dc9bc74b6e2d19c44d9d992",
     "semantic_hash": ""
   },
   "package-lock.json": {
