@@ -244,8 +244,91 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     slashSelectedIndex = 0;
   }
 
+
+  const SYSTEM_SLASH_COMMANDS = [
+    {
+      id: 'cmd-save',
+      cmd: '/save',
+      name: 'Simpan Keputusan (Save Context)',
+      role: 'Simpan keputusan obrolan ini ke Sprint Memory & Log Sistem',
+      divName: 'Internal Memory',
+      color: '#10b981',
+      badge: 'Sistem',
+      icon: '💾',
+      isSystem: true,
+      needsArg: true,
+    },
+    {
+      id: 'cmd-share-memory',
+      cmd: '/share-memory',
+      name: 'Sinkronisasi Shared Memory',
+      role: 'Bagikan & muat memori kerja lintas divisi ke percakapan ini',
+      divName: 'Internal Memory',
+      color: '#0ea5e9',
+      badge: 'Sistem',
+      icon: '🔄',
+      isSystem: true,
+    },
+    {
+      id: 'cmd-notulen',
+      cmd: '/notulen',
+      name: 'Sintesis Notulen Master',
+      role: 'Gabungkan seluruh keputusan divisi ke FINAL_MASTER_DOC.md',
+      divName: 'Notulen Pusat',
+      color: '#8b5cf6',
+      badge: 'Sistem',
+      icon: '📝',
+      isSystem: true,
+    },
+    {
+      id: 'cmd-topologi',
+      cmd: '/topologi',
+      name: 'Status Topologi Kode (Graphify)',
+      role: 'Lihat status graf, node beban (god nodes) & dependency cycle',
+      divName: 'Arsitektur',
+      color: '#6366f1',
+      badge: 'Sistem',
+      icon: '🗺️',
+      isSystem: true,
+    },
+    {
+      id: 'cmd-status-memori',
+      cmd: '/status-memori',
+      name: 'Tabel Struktur 3-Tier Memory',
+      role: 'Tampilkan tabel status Master Blueprint, Sprint, dan Archive',
+      divName: 'Internal Memory',
+      color: '#f59e0b',
+      badge: 'Sistem',
+      icon: '📊',
+      isSystem: true,
+    },
+    {
+      id: 'cmd-clipping',
+      cmd: '/clipping',
+      name: 'Buka Clipping Blueprint',
+      role: 'Muat potongan indeks spesifik (contoh: /clipping TECH-01)',
+      divName: 'Master Blueprint',
+      color: '#14b8a6',
+      badge: 'Sistem',
+      icon: '📑',
+      isSystem: true,
+      needsArg: true,
+    },
+    {
+      id: 'cmd-reset',
+      cmd: '/reset',
+      name: 'Reset Sesi Percakapan',
+      role: 'Kosongkan memori obrolan sesi agen saat ini untuk mulai baru',
+      divName: 'Sesi',
+      color: '#ef4444',
+      badge: 'Sistem',
+      icon: '🗑️',
+      isSystem: true,
+    },
+  ];
+
   function updateSlashPopup(query = '') {
-    if (!els.slashPopup || !els.slashList || currentId !== 'meeting') {
+    if (!els.slashPopup || !els.slashList || !currentId) {
       closeSlashPopup();
       return;
     }
@@ -280,7 +363,19 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       })
       .filter(Boolean);
 
-    const candidates = [allItem, ...memberItems];
+    let candidates = [];
+    if (currentId === 'meeting') {
+      candidates = [allItem, ...memberItems, ...SYSTEM_SLASH_COMMANDS];
+    } else {
+      candidates = [...SYSTEM_SLASH_COMMANDS];
+    }
+
+    const popupTitle = els.slashPopup.querySelector('.slash-popup-title');
+    if (popupTitle) {
+      popupTitle.textContent = currentId === 'meeting'
+        ? '🎯 Target Respon Ruang Rapat & Perintah Sistem'
+        : '⚡ Perintah Sistem Vatio (Antigravity Style)';
+    }
     const q = (query || '').toLowerCase().trim();
 
     if (!q) {
@@ -333,9 +428,11 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       row.dataset.idx = idx;
       row.style.setProperty('--c', item.color);
 
-      const avatarHtml = item.isAll
-        ? `<div class="slash-item-avatar all-avatar">👥</div>`
-        : `<div class="slash-item-avatar">${item.initials}</div>`;
+      const avatarHtml = item.icon
+        ? `<div class="slash-item-avatar" style="font-size: 16px;">${item.icon}</div>`
+        : (item.isAll
+          ? `<div class="slash-item-avatar all-avatar">👥</div>`
+          : `<div class="slash-item-avatar">${item.initials}</div>`);
 
       row.innerHTML = `
         ${avatarHtml}
@@ -367,8 +464,24 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
 
   function selectSlashItem(item) {
     if (!item) return;
-    els.input.value = `${item.cmd} `;
     closeSlashPopup();
+
+    if (item.isSystem) {
+      if (!item.needsArg) {
+        els.input.value = item.cmd;
+        autosize();
+        syncSend();
+        submit(item.cmd);
+        return;
+      }
+      els.input.value = `${item.cmd} `;
+      autosize();
+      syncSend();
+      els.input.focus();
+      return;
+    }
+
+    els.input.value = `${item.cmd} `;
 
     if (item.isAll) {
       responseTargets = [...meetingParticipants];
@@ -1046,7 +1159,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     syncSend();
 
     const val = els.input.value;
-    if (currentId === 'meeting' && val.startsWith('/')) {
+    if (val.startsWith('/')) {
       const spaceIdx = val.indexOf(' ');
       if (spaceIdx === -1) {
         const query = val.slice(1);

@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { agentById, divisionById } from '../shared/roster.js';
 import { buildSystemPrompt, buildMeetingPrompt } from './prompts.js';
-import { getClipping, listContext, getMemoryStructureTable, getArchiveList, synthesizeNotulen, deleteAgentSession, clearAllSessions, deleteContextId, triggerLogRotation } from './context.js';
+import { getClipping, listContext, getMemoryStructureTable, getArchiveList, synthesizeNotulen, deleteAgentSession, clearAllSessions, deleteContextId, triggerLogRotation, saveQuickDecision, getSharedMemorySummary, getTopologySummary } from './context.js';
 import { streamNineRouter, nineRouterBase } from './ninerouter.js';
 import { delegate, wantsDelegation } from './delegate.js';
 

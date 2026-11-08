@@ -6,7 +6,7 @@ import {
   deleteContextId,
   triggerLogRotation,
 } from '../sys-agents/session-manager.js';
-import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { synthesizeAllDivisions } from '../sys-agents/notulen-master.js';
@@ -272,6 +272,170 @@ export function synthesizeNotulen() {
     `| 💼 Bisnis (Arya Sena) | \`BIZ-DEC-01..03\` | ✅ Aligned Inovasi & Problem Solving |\n` +
     `| 🎯 Venture (Nadira) | \`VENTURE-DEC-01..03\` | ✅ Ready for Pitching |\n\n` +
     `> 💡 *Buka file \`FINAL_MASTER_DOC.md\` untuk melihat dokumen utuh dengan Executive Summary, Matriks Harmonisasi, Feasibility Anti-Slop, dan Action Items.*`;
+}
+
+
+const TECH_LOGS_PATH = resolve(__dirname, '../sys-agents/tech-logs.md');
+const BIZ_LOGS_PATH = resolve(__dirname, '../sys-agents/biz-logs.md');
+const VENTURE_LOGS_PATH = resolve(__dirname, '../sys-agents/venture-logs.md');
+const SESSIONS_DIR_PATH = resolve(__dirname, '../sys-agents/sessions');
+
+/**
+ * Menyimpan keputusan singkat ke Tier 2 Sprint Working Memory & Division Logs
+ * Shortcut: /save [teks keputusan]
+ */
+export function saveQuickDecision(rawText, origin = 'general') {
+  const text = String(rawText || '').trim();
+  if (!text) {
+    return '⚠️ **Gagal Menyimpan:** Harap sertakan poin keputusan yang ingin disimpan.\n\n*Contoh:* `/save Model adopsi zero-friction untuk antrean posyandu via web ringan`';
+  }
+
+  const now = new Date();
+  const timeId = now.getHours().toString().padStart(2, '0') + now.getMinutes().toString().padStart(2, '0');
+  const dateTag = now.toISOString().slice(2, 10).replace(/-/g, '');
+  const decisionId = `DEC-${dateTag}-${timeId}`;
+  const entryLine = `- [${decisionId}] ${text}`;
+
+  const filesUpdated = [];
+
+  // 1. Simpan ke Tier 2: SPRINT_LOG.md
+  if (existsSync(TIER2_SPRINT_LOG_PATH)) {
+    try {
+      let sprintContent = readFileSync(TIER2_SPRINT_LOG_PATH, 'utf-8');
+      if (sprintContent.includes('<!-- SPRINT_LOG_END -->')) {
+        sprintContent = sprintContent.replace(
+          '<!-- SPRINT_LOG_END -->',
+          `${entryLine}\n<!-- SPRINT_LOG_END -->`
+        );
+      } else {
+        sprintContent += `\n${entryLine}\n`;
+      }
+      writeFileSync(TIER2_SPRINT_LOG_PATH, sprintContent, 'utf-8');
+      filesUpdated.push('sys-agents/SPRINT_LOG.md');
+    } catch (err) {
+      console.error('[context] gagal append SPRINT_LOG:', err);
+    }
+  }
+
+  // 2. Klasifikasi target log divisi berdasarkan origin atau kata kunci
+  const lower = (text + ' ' + origin).toLowerCase();
+  let targetDivisionLog = null;
+  let targetName = 'Umum (General)';
+
+  const o = String(origin || '').toLowerCase();
+  if (/\b(sena|biz|bizdata|rizky|kirana|eko|melati)\b/i.test(o)) {
+    targetDivisionLog = BIZ_LOGS_PATH;
+    targetName = 'Bisnis & Inovasi Layanan (Biz)';
+  } else if (/\b(nadira|rian|venture)\b/i.test(o)) {
+    targetDivisionLog = VENTURE_LOGS_PATH;
+    targetName = 'Venture Strategy & Pitch (Venture)';
+  } else if (/\b(arga|danu|aditya|farhan|saras|bayu|fajar|laras|andi|maya|core|laravel|js|solution|tech)\b/i.test(o)) {
+    targetDivisionLog = TECH_LOGS_PATH;
+    targetName = 'Teknis & Arsitektur (Tech)';
+  } else if (/\b(proses|bisnis|adopsi|warga|biaya|token|economics|unit economics|umkm|posyandu)\b/i.test(lower)) {
+    targetDivisionLog = BIZ_LOGS_PATH;
+    targetName = 'Bisnis & Inovasi Layanan (Biz)';
+  } else if (/\b(venture|pitch|pitching|presentasi|demo|investor|q&a)\b/i.test(lower)) {
+    targetDivisionLog = VENTURE_LOGS_PATH;
+    targetName = 'Venture Strategy & Pitch (Venture)';
+  } else if (/\b(topologi|arsitektur|database|api|backend|frontend|query|serverless|sre|cache)\b/i.test(lower)) {
+    targetDivisionLog = TECH_LOGS_PATH;
+    targetName = 'Teknis & Arsitektur (Tech)';
+  }
+
+  if (targetDivisionLog && existsSync(targetDivisionLog)) {
+    try {
+      let divContent = readFileSync(targetDivisionLog, 'utf-8');
+      if (divContent.includes('<!-- DECISION_END -->')) {
+        divContent = divContent.replace(
+          '<!-- DECISION_END -->',
+          `${entryLine}\n<!-- DECISION_END -->`
+        );
+      } else {
+        divContent += `\n${entryLine}\n`;
+      }
+      writeFileSync(targetDivisionLog, divContent, 'utf-8');
+      filesUpdated.push(targetDivisionLog.replace(/\\/g, '/').split('/').slice(-2).join('/'));
+    } catch (err) {
+      console.error('[context] gagal append division log:', err);
+    }
+  }
+
+  return `### 💾 Keputusan Berhasil Disimpan ke Sistem Vatio!\n\n` +
+    `- **ID Keputusan:** \`[${decisionId}]\`\n` +
+    `- **Kategori:** ${targetName}\n` +
+    `- **Isi Konsensus:** ${text}\n` +
+    `- **Tersinkronisasi ke:** ${filesUpdated.map((f) => '`' + f + '`').join(', ')}\n\n` +
+    `> 💡 *Keputusan ini otomatis terintegrasi ke seluruh 41 agen dan siap digabung saat Anda memanggil \`/notulen\`.*`;
+}
+
+/**
+ * Mengambil ringkasan memori yang sedang dibagikan ke seluruh agen (Shared Memory)
+ * Shortcut: /share-memory
+ */
+export function getSharedMemorySummary() {
+  let tier1Count = 0;
+  const tier1Items = [];
+  if (existsSync(TIER1_CONTEXT_PATH)) {
+    const text = readFileSync(TIER1_CONTEXT_PATH, 'utf-8');
+    const matches = text.matchAll(/-s*(\[.*?\])\s*(.*)/g);
+    for (const m of matches) {
+      tier1Count++;
+      tier1Items.push('`' + m[1] + '` ' + m[2]);
+    }
+  }
+
+  let tier2Count = 0;
+  const tier2Items = [];
+  if (existsSync(TIER2_SPRINT_LOG_PATH)) {
+    const text = readFileSync(TIER2_SPRINT_LOG_PATH, 'utf-8');
+    const match = text.match(/<!-- SPRINT_LOG_START -->([\s\S]*?)<!-- SPRINT_LOG_END -->/);
+    const raw = match ? match[1] : text;
+    raw.split('\n').map((l) => l.trim()).filter((l) => l.startsWith('- [')).forEach((l) => {
+      tier2Count++;
+      tier2Items.push(l.replace(/^-\s*/, ''));
+    });
+  }
+
+  let sessionCount = 0;
+  if (existsSync(SESSIONS_DIR_PATH)) {
+    try {
+      sessionCount = readdirSync(SESSIONS_DIR_PATH).filter((f) => f.endsWith('.md')).length;
+    } catch {}
+  }
+
+  return `### 🔄 Status Shared Memory Lintas Divisi (Vatio Corp)\n\n` +
+    `Seluruh **41 agen di 9 divisi** Kantor AI tersinkronisasi ke memori kerja yang sama:\n\n` +
+    `#### 🏛️ Tier 1: Master Blueprint (${tier1Count} Arsitektur Terindeks)\n` +
+    (tier1Items.length ? tier1Items.map((item) => `- ${item}`).join('\n') : '- Belum ada blueprint.') +
+    `\n\n#### ⚡ Tier 2: Sprint Working Memory (${tier2Count} Keputusan Aktif)\n` +
+    (tier2Items.length ? tier2Items.slice(-5).map((item) => `- ${item}`).join('\n') : '- Belum ada log sprint aktif.') +
+    `\n\n#### 💬 Sesi Percakapan Aktif\n` +
+    `- **Total Berkas Sesi:** ${sessionCount} berkas di \`sys-agents/sessions/\`\n` +
+    `- **Status Notulen:** Siap disintesis ke \`FINAL_MASTER_DOC.md\` & \`DOKUMEN_MASTER_INOVASI.md\`\n\n` +
+    `> 💡 *Ketik \`/save [pesan]\` untuk menambah keputusan, atau \`/notulen\` untuk membuat sintesis dokumen final.*`;
+}
+
+/**
+ * Mengambil ringkasan topologi kode (Graphify) dan status god nodes
+ * Shortcut: /topologi atau /graphify
+ */
+export function getTopologySummary() {
+  if (!existsSync(ROOT_CONTEXT_PATH)) {
+    return '⚠️ **SYSTEM_CONTEXT.md tidak ditemukan.**';
+  }
+
+  const text = readFileSync(ROOT_CONTEXT_PATH, 'utf-8');
+  const sectionMatch = text.match(/## 2\. Graphify Analysis Summary([\s\S]*?)(?=## 3\.|$)/);
+  if (!sectionMatch) {
+    return '⚠️ **Bagian Graphify Analysis Summary belum terdata di SYSTEM_CONTEXT.md.**';
+  }
+
+  const summary = sectionMatch[1].trim();
+
+  return `### 🗺️ Status Topologi Kode & Graphify (Vatio Corp)\n\n` +
+    `${summary}\n\n` +
+    `> 💡 *Topologi ini dipantau oleh Arga Pratama & Om Danu untuk mencegah circular dependency dan god nodes.* `;
 }
 
 export {
