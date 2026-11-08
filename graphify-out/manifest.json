@@ -1,8 +1,8 @@
 {
   "package.json": {
-    "mtime": 1794113040.1475194,
-    "seen": 1794113107.073555,
-    "ast_hash": "60a1d0afa8fadf0869d6f543cd05d359",
+    "mtime": 1794116272.8035822,
+    "seen": 1794116323.899452,
+    "ast_hash": "be659d3318f5e223d3cad51177d90263",
     "semantic_hash": ""
   },
   "server/delegate.js": {
@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "server/index.js": {
-    "mtime": 1794112734.6483183,
-    "seen": 1794112916.8014088,
-    "ast_hash": "e3e53cc493685a9f0cecd794e16906a9",
+    "mtime": 1794116172.8303647,
+    "seen": 1794116323.899452,
+    "ast_hash": "e65176b11a8ff6c79f7840cf21b898ac",
     "semantic_hash": ""
   },
   "server/prompts.js": {
@@ -276,21 +276,21 @@
     "semantic_hash": ""
   },
   "scripts/sync-context.js": {
-    "mtime": 1794112578.9331274,
-    "seen": 1794112916.8014088,
-    "ast_hash": "8952ade9c5d3879576a4974ad44236bc",
+    "mtime": 1794116235.5156147,
+    "seen": 1794116323.899452,
+    "ast_hash": "3fe5c17f38543f045130cd2b368ba79d",
     "semantic_hash": ""
   },
   "server/context.js": {
-    "mtime": 1794112634.5219204,
-    "seen": 1794112916.8014088,
-    "ast_hash": "08293141db9239157d9b54b3e8c27fdc",
+    "mtime": 1794116138.1148093,
+    "seen": 1794116323.899452,
+    "ast_hash": "edaff2191d3df8fdd863eabfc7f2dabf",
     "semantic_hash": ""
   },
   "SYSTEM_CONTEXT.md": {
-    "mtime": 1794115401.1938255,
-    "seen": 1794115475.2654502,
-    "ast_hash": "e2ae21c52acfad10feea587770fcbc54",
+    "mtime": 1794116297.070291,
+    "seen": 1794116323.899452,
+    "ast_hash": "47523b3f73732654816ffe0ada7c85ce",
     "semantic_hash": ""
   },
   "test/context-sync.test.js": {
@@ -309,6 +309,42 @@
     "mtime": 1794112984.9183118,
     "seen": 1794113107.073555,
     "ast_hash": "c9762d600dc9bc74b6e2d19c44d9d992",
+    "semantic_hash": ""
+  },
+  "sys-agents/rotate-logs.cjs": {
+    "mtime": 1794116059.7122946,
+    "seen": 1794116323.899452,
+    "ast_hash": "f56cf43e24e4e98205f0d2cbd0865b10",
+    "semantic_hash": ""
+  },
+  "sys-agents/rotate-logs.js": {
+    "mtime": 1794116054.1256342,
+    "seen": 1794116323.899452,
+    "ast_hash": "8edddbd2c70a952a0dc15301c1b6b591",
+    "semantic_hash": ""
+  },
+  "test/tiered-memory.test.js": {
+    "mtime": 1794116289.6253967,
+    "seen": 1794116323.899452,
+    "ast_hash": "07f01f99b077edd6506e44bc752cd4d2",
+    "semantic_hash": ""
+  },
+  "sys-agents/SPRINT_LOG.md": {
+    "mtime": 1794116297.2737548,
+    "seen": 1794116323.899452,
+    "ast_hash": "17f41c78231392db9a7e39dc99e587ee",
+    "semantic_hash": ""
+  },
+  "sys-agents/SYSTEM_CONTEXT.md": {
+    "mtime": 1794116297.070291,
+    "seen": 1794116323.899452,
+    "ast_hash": "77e2e40c25be8944e7077aa08fa9095e",
+    "semantic_hash": ""
+  },
+  "sys-agents/archive/HISTORY_2026-11-08.md": {
+    "mtime": 1794116297.2638235,
+    "seen": 1794116323.899452,
+    "ast_hash": "b205d3024071875ebb6f26edf9f86e7e",
     "semantic_hash": ""
   },
   "package-lock.json": {

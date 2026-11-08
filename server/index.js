@@ -5,6 +5,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { agentById, divisionById } from '../shared/roster.js';
 import { buildSystemPrompt, buildMeetingPrompt } from './prompts.js';
+import { getClipping } from './context.js';
 import { streamNineRouter, nineRouterBase } from './ninerouter.js';
 import { delegate, wantsDelegation } from './delegate.js';
 
@@ -124,6 +125,17 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
     'X-Accel-Buffering': 'no',
   });
   const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
+
+  // 9Router Hook: Protocol Tiered Memory 'load-clipping'
+  const lastUserMsg = messages[messages.length - 1].content.trim();
+  if (/^(load-clipping|\/load-clipping)/i.test(lastUserMsg)) {
+    const arg = lastUserMsg.replace(/^(load-clipping|\/load-clipping)\s*/i, '').trim();
+    const clippingResponse = getClipping(arg);
+    send({ event: 'text', data: { text: clippingResponse } });
+    send({ event: 'done', data: {} });
+    res.end();
+    return;
+  }
 
   let closed = false;
   let stream = null;

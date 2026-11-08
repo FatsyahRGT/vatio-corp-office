@@ -5,12 +5,13 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = resolve(__dirname, '..');
 const CONTEXT_PATH = resolve(ROOT_DIR, 'SYSTEM_CONTEXT.md');
+const TIER1_PATH = resolve(ROOT_DIR, 'sys-agents/SYSTEM_CONTEXT.md');
 const REPORT_PATH = resolve(ROOT_DIR, 'graphify-out/GRAPH_REPORT.md');
 const GRAPH_JSON_PATH = resolve(ROOT_DIR, 'graphify-out/graph.json');
 
 export function syncGraphifyToContext() {
-  if (!existsSync(CONTEXT_PATH)) {
-    console.error('❌ SYSTEM_CONTEXT.md tidak ditemukan di root!');
+  if (!existsSync(CONTEXT_PATH) && !existsSync(TIER1_PATH)) {
+    console.error('❌ SYSTEM_CONTEXT.md tidak ditemukan!');
     return false;
   }
 
@@ -56,7 +57,16 @@ export function syncGraphifyToContext() {
     ? godNodesList.map((g) => `  ${g}`).join('\n')
     : '  1. `createPanel()` - UI Hub\n  2. `box()` - 3D Generator\n  3. `submit()` - Chat Stream';
 
-  const newSection2 = `## 2. Graphify Analysis Summary
+  const godNodesShort = godNodesList.length > 0
+    ? godNodesList.slice(0, 3).map((g) => {
+        const name = g.replace(/^\d+\.\s*/, '').replace(/`/g, '').split('(')[0].trim();
+        return `\`${name}()\``;
+      }).join(', ')
+    : '`createPanel()`, `box()`, `submit()`';
+
+  // 1. Sinkronisasi ke Root SYSTEM_CONTEXT.md bila ada
+  if (existsSync(CONTEXT_PATH)) {
+    const newSection2 = `## 2. Graphify Analysis Summary
 *(Bagian ini otomatis diperbarui oleh Graphify Sync pada ${today})*
 - **Date Last Scan:** ${today}
 - **Topology Scale:** ${summaryLine}
@@ -64,18 +74,27 @@ export function syncGraphifyToContext() {
 ${godNodesFormatted}
 - **Circular Dependencies:** ${cyclesInfo}`;
 
-  let contextContent = readFileSync(CONTEXT_PATH, 'utf-8');
-  const section2Regex = /## 2\. Graphify Analysis Summary[\s\S]*?(?=\n## 3\.|\Z)/;
+    let contextContent = readFileSync(CONTEXT_PATH, 'utf-8');
+    const section2Regex = /## 2\. Graphify Analysis Summary[\s\S]*?(?=\n## 3\.|\Z)/;
 
-  if (section2Regex.test(contextContent)) {
-    contextContent = contextContent.replace(section2Regex, newSection2 + '\n\n');
-    writeFileSync(CONTEXT_PATH, contextContent, 'utf-8');
-    console.log('✅ SYSTEM_CONTEXT.md berhasil disinkronkan dengan data Graphify terbaru!');
-    return true;
-  } else {
-    console.warn('⚠️ Section 2 tidak ditemukan dengan format standar di SYSTEM_CONTEXT.md.');
-    return false;
+    if (section2Regex.test(contextContent)) {
+      contextContent = contextContent.replace(section2Regex, newSection2 + '\n\n');
+      writeFileSync(CONTEXT_PATH, contextContent, 'utf-8');
+    }
   }
+
+  // 2. Sinkronisasi ke Tier 1 Master Blueprint (sys-agents/SYSTEM_CONTEXT.md)
+  if (existsSync(TIER1_PATH)) {
+    let tier1Content = readFileSync(TIER1_PATH, 'utf-8');
+    tier1Content = tier1Content.replace(
+      /- God Nodes:[^\n]*/,
+      `- God Nodes: ${godNodesShort} (Scan: ${today})`
+    );
+    writeFileSync(TIER1_PATH, tier1Content, 'utf-8');
+  }
+
+  console.log('✅ SYSTEM_CONTEXT.md (Root & Tier 1) berhasil disinkronkan dengan data Graphify terbaru!');
+  return true;
 }
 
 // Jalankan jika dipanggil via CLI: node scripts/sync-context.js
