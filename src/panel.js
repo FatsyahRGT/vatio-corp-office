@@ -80,6 +80,8 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     close: $('btn-close'),
     sidebar: $('panel-sidebar'),
     agentSearch: $('agent-search'),
+    clearSearch: $('btn-clear-search'),
+    backSidebar: $('btn-back-sidebar'),
     agentList: $('agent-list'),
     attachBtn: $('btn-attach'),
     fileInput: $('file-input'),
@@ -451,6 +453,9 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   let searchHighlightIndex = -1;
 
   function selectAndFocus(agentId) {
+    if (els.panel) {
+      els.panel.classList.remove('mobile-show-sidebar');
+    }
     onSelect(agentId);
     setTimeout(() => {
       if (els.input) {
@@ -1118,8 +1123,33 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     els.expand.addEventListener('click', () => toggleExpand());
   }
 
+  if (els.backSidebar) {
+    els.backSidebar.addEventListener('click', () => {
+      if (els.panel) {
+        els.panel.classList.toggle('mobile-show-sidebar');
+      }
+    });
+  }
+
+  if (els.clearSearch) {
+    els.clearSearch.addEventListener('click', () => {
+      if (els.agentSearch) {
+        els.agentSearch.value = '';
+        els.clearSearch.hidden = true;
+        renderAgentList('');
+        highlightAgentItem(-1);
+        els.agentSearch.focus();
+      }
+    });
+  }
+
   if (els.agentSearch) {
-    els.agentSearch.addEventListener('input', (e) => renderAgentList(e.target.value));
+    els.agentSearch.addEventListener('input', (e) => {
+      if (els.clearSearch) {
+        els.clearSearch.hidden = !e.target.value;
+      }
+      renderAgentList(e.target.value);
+    });
 
     els.agentSearch.addEventListener('keydown', (e) => {
       const items = els.agentList?.querySelectorAll('.agent-item') || [];

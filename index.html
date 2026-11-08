@@ -52,40 +52,59 @@
           <div class="sidebar-logo">🏢</div>
           <div>
             <strong>Kantor Virtual</strong>
-            <small>Tim & Spesialis AI</small>
+            <small>Tim & Spesialis AI · Vatio Corp</small>
           </div>
         </div>
       </div>
       <div class="sidebar-search">
-        <input type="text" id="agent-search" placeholder="Cari divisi, karyawan, skill… (↓ ↑ Enter)" title="Gunakan panah ↓ ↑ untuk memilih dan Enter untuk langsung membuka kolom chat (Ctrl+K untuk cari)" autocomplete="off" />
-      </div>
-
-      <!-- Card Akses Cepat Ruang Rapat -->
-      <div class="meeting-entry-card" id="btn-open-meeting" title="Buka Ruang Rapat Tim Bersama">
-        <div class="meeting-entry-icon">🎙️</div>
-        <div class="meeting-entry-info">
-          <strong>Ruang Rapat Tim</strong>
-          <small id="meeting-participant-count">Multi-Agen Group Meeting</small>
-        </div>
-        <span class="meeting-entry-badge">Grup</span>
-      </div>
-
-      <button type="button" id="sidebar-btn-reset-all" class="sidebar-reset-btn" title="Hapus seluruh riwayat obrolan di semua divisi untuk memulai topik proyek baru">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <svg class="sidebar-search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        Reset Sesi Semua Divisi
-      </button>
-      <div id="agent-list" class="agent-list"></div>
+        <input type="text" id="agent-search" placeholder="Cari karyawan, divisi… (↓ ↑ Enter)" title="Gunakan panah ↓ ↑ untuk memilih dan Enter untuk langsung membuka kolom chat (Ctrl+K untuk cari)" autocomplete="off" />
+        <button type="button" id="btn-clear-search" class="clear-search-btn" title="Hapus pencarian" hidden aria-label="Hapus kata kunci pencarian">✕</button>
+      </div>
+
+      <div class="sidebar-scroll-area">
+        <!-- Card Akses Cepat Ruang Rapat -->
+        <div class="meeting-entry-card" id="btn-open-meeting" title="Buka Ruang Rapat Tim Bersama" role="button" tabindex="0">
+          <div class="meeting-entry-icon">🎙️</div>
+          <div class="meeting-entry-info">
+            <strong>Ruang Rapat Tim</strong>
+            <small id="meeting-participant-count">Multi-Agen Group Meeting</small>
+          </div>
+          <span class="meeting-entry-badge">Grup</span>
+        </div>
+
+        <div id="agent-list" class="agent-list" role="listbox"></div>
+      </div>
+
+      <!-- Footer Sidebar: Aksi Reset Dipindah ke Bawah agar Alur Kontak Bersih -->
+      <div class="sidebar-footer">
+        <button type="button" id="sidebar-btn-reset-all" class="sidebar-reset-btn" title="Bersihkan riwayat percakapan semua divisi untuk memulai topik proyek baru">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          Reset Sesi Semua Divisi
+        </button>
+      </div>
     </div>
 
     <!-- Area Obrolan Utama -->
     <div class="panel-main">
       <div class="panel-head">
+        <button type="button" id="btn-back-sidebar" class="icon-btn mobile-back-btn" title="Kembali ke daftar tim" aria-label="Kembali ke daftar kontak">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
         <div id="avatar" class="avatar"></div>
         <div class="who">
-          <strong id="who-name"></strong>
+          <div class="who-title-wrap">
+            <strong id="who-name"></strong>
+            <span class="who-status-pill"><span class="who-status-dot"></span>Aktif</span>
+          </div>
           <span id="who-role"></span>
         </div>
         <button id="btn-toggle-meeting-bar" class="icon-btn" title="Sembunyikan / Tampilkan Pengaturan Peserta Rapat" aria-label="Toggle pengaturan rapat" hidden>
@@ -180,18 +199,23 @@
         </div>
 
         <input type="file" id="file-input" hidden multiple accept="image/*,.pdf,.doc,.docx,.txt,.csv,.json,.js,.php,.py,.zip,.md,.html" />
-        <button type="button" id="btn-attach" class="icon-btn attach-btn" title="Lampirkan file atau gambar (gambar, pdf, doc, code, zip)">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-          </svg>
-        </button>
-        <textarea id="input" rows="1" placeholder="Ketik pesan atau lampirkan file (Enter kirim, Shift+Enter baris baru)…" maxlength="32000" enterkeyhint="send"></textarea>
-        <button id="btn-send" type="submit" aria-label="Kirim">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
+        <div class="composer-inner">
+          <button type="button" id="btn-attach" class="icon-btn attach-btn" title="Lampirkan file atau gambar (gambar, pdf, doc, zip, kode)" aria-label="Lampirkan file">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+            </svg>
+          </button>
+          <textarea id="input" rows="1" placeholder="Tulis pesan ke asisten… (Enter kirim, Shift+Enter baris baru)" maxlength="32000" enterkeyhint="send"></textarea>
+          <button id="btn-send" type="submit" aria-label="Kirim pesan" title="Kirim pesan (Enter)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
       </form>
 
-      <div class="panel-foot">AI bisa keliru. Semua jawaban berupa draft, cek dulu sebelum dikirim ke klien.</div>
+      <div class="panel-foot">
+        <span class="panel-foot-disclaimer">AI bisa keliru. Verifikasi informasi penting sebelum implementasi.</span>
+        <span class="panel-foot-shortcuts">↵ Kirim &nbsp;·&nbsp; Shift+↵ Baris baru &nbsp;·&nbsp; Ctrl+K Cari</span>
+      </div>
     </div>
   </aside>
 
