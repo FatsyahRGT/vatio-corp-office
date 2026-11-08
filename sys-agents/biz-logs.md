@@ -6,4 +6,10 @@ Kontributor: Arya "Sena" Pradipta (Lead Innovation & Solution Architect)
 - [BIZ-DEC-02] Eliminasi Gap Bisnis-Teknologi: Mengganti formulir manual yang rawan human error menjadi automasi alur kerja terpadu, memangkas waktu tunggu layanan hingga 70%.
 - [BIZ-DEC-03] Unit Economics & Adopsi: Model adopsi zero-friction untuk komunitas—tanpa instalasi aplikasi rumit, cukup akses antarmuka berbasis web responsif yang ringan kuota.
 - [DEC-261108-1722] Model adopsi zero-friction untuk layanan warga
+- [DEC-261108-1756] Model adopsi zero-friction untuk layanan warga
+- [DEC-261108-1804] Model adopsi zero-friction untuk layanan warga
+- [DEC-261108-1843] Model adopsi zero-friction untuk layanan warga
+- [DEC-261108-1844] Model adopsi zero-friction untuk layanan warga
+- [DEC-261108-1844] Model adopsi zero-friction untuk layanan warga
+- [DEC-261108-1845] Model adopsi zero-friction untuk layanan warga
 <!-- DECISION_END -->

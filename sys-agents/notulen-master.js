@@ -15,8 +15,6 @@ const SPRINT_LOG = resolve(SYS_DIR, 'SPRINT_LOG.md');
 const SYSTEM_CONTEXT = resolve(SYS_DIR, 'SYSTEM_CONTEXT.md');
 
 const FINAL_MASTER_DOC = resolve(ROOT_DIR, 'FINAL_MASTER_DOC.md');
-const HACKATHON_DOC = resolve(ROOT_DIR, 'DOKUMEN_VALID_HACKATHON.md');
-const INOVASI_DOC = resolve(ROOT_DIR, 'DOKUMEN_MASTER_INOVASI.md');
 
 function extractDecisions(filePath) {
   if (!existsSync(filePath)) return [];
@@ -134,10 +132,8 @@ ${ventureDecisions.join('\n\n')}
 *Dokumen ini sah dan terikat sebagai panduan tunggal seluruh divisi Vatio Corp.*
 `;
 
-  // Simpan ke FINAL_MASTER_DOC.md, DOKUMEN_MASTER_INOVASI.md, dan DOKUMEN_VALID_HACKATHON.md
+  // Simpan ke FINAL_MASTER_DOC.md sebagai single source of truth
   writeFileSync(FINAL_MASTER_DOC, finalDoc, 'utf-8');
-  writeFileSync(INOVASI_DOC, finalDoc, 'utf-8');
-  writeFileSync(HACKATHON_DOC, finalDoc, 'utf-8');
 
   console.log(`[Notulen Master] Notulensi telah diintegrasikan ke FINAL_MASTER_DOC.md (${stats.total} keputusan)`);
 

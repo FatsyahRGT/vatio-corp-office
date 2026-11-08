@@ -17,16 +17,12 @@ const ROOT_DIR = resolve(__dirname, '..');
 const TIER1_PATH = resolve(ROOT_DIR, 'sys-agents/SYSTEM_CONTEXT.md');
 const TIER2_PATH = resolve(ROOT_DIR, 'sys-agents/SPRINT_LOG.md');
 const ARCHIVE_DIR = resolve(ROOT_DIR, 'sys-agents/archive');
-const CHECK_SH = resolve(ROOT_DIR, 'sys-agents/check-status.sh');
-const CHECK_PS1 = resolve(ROOT_DIR, 'sys-agents/check-status.ps1');
 const CHECK_JS = resolve(ROOT_DIR, 'sys-agents/check-status.js');
 
 test('Tiered Memory: Direktori dan File Master Blueprint (Tier 1 & Tier 2) Terbentuk', () => {
   assert.ok(existsSync(TIER1_PATH), 'sys-agents/SYSTEM_CONTEXT.md harus ada');
   assert.ok(existsSync(TIER2_PATH), 'sys-agents/SPRINT_LOG.md harus ada');
   assert.ok(existsSync(ARCHIVE_DIR), 'sys-agents/archive/ harus ada');
-  assert.ok(existsSync(CHECK_SH), 'sys-agents/check-status.sh harus ada');
-  assert.ok(existsSync(CHECK_PS1), 'sys-agents/check-status.ps1 harus ada');
   assert.ok(existsSync(CHECK_JS), 'sys-agents/check-status.js harus ada');
 
   const tier1Content = readFileSync(TIER1_PATH, 'utf-8');

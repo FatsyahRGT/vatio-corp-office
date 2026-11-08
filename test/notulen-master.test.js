@@ -9,7 +9,6 @@ import { synthesizeNotulen } from '../server/context.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = resolve(__dirname, '..');
 const FINAL_DOC_PATH = resolve(ROOT_DIR, 'FINAL_MASTER_DOC.md');
-const HACKATHON_DOC_PATH = resolve(ROOT_DIR, 'DOKUMEN_VALID_HACKATHON.md');
 
 test('Notulen Master: Ingesti Lintas Divisi dan Sintesis Menghasilkan Master Document', () => {
   const result = synthesizeAllDivisions();
@@ -21,8 +20,7 @@ test('Notulen Master: Ingesti Lintas Divisi dan Sintesis Menghasilkan Master Doc
   assert.ok(result.stats.ventureCount >= 3, 'Harus mendeteksi minimal 3 narasi venture');
 
   assert.ok(existsSync(FINAL_DOC_PATH), 'FINAL_MASTER_DOC.md harus berhasil dibuat');
-  assert.ok(existsSync(HACKATHON_DOC_PATH), 'DOKUMEN_VALID_HACKATHON.md harus berhasil dibuat');
-
+  
   const content = readFileSync(FINAL_DOC_PATH, 'utf-8');
   assert.ok(content.includes('DOKUMEN MASTER INOVASI & PROBLEM SOLVING: Vatio Corp Master Synthesis'), 'Harus memiliki header judul master');
   assert.ok(content.includes('Transformasi Layanan Komunitas & Produktivitas Operasional Modern'), 'Harus menyasar misi inovasi layanan komunitas');

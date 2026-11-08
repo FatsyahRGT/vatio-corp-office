@@ -264,7 +264,6 @@ export function synthesizeNotulen() {
     `*Sistem Notulen:* "Sedang melakukan merge... Mendeteksi **${stats.techCount} keputusan teknis** dari Arga & Danu, **${stats.bizCount} arahan bisnis** dari Arya Sena, dan **${stats.ventureCount} narasi pitching** dari Nadira."\n\n` +
     `📄 **Dokumen final master valid berhasil diterbitkan ke:**\n` +
     `- \`FINAL_MASTER_DOC.md\`\n` +
-    `- \`DOKUMEN_VALID_HACKATHON.md\`\n\n` +
     `#### 📑 Cuplikan Matriks Harmonisasi:\n` +
     `| Divisi | ID | Status |\n` +
     `| :--- | :--- | :--- |\n` +
@@ -412,7 +411,7 @@ export function getSharedMemorySummary() {
     (tier2Items.length ? tier2Items.slice(-5).map((item) => `- ${item}`).join('\n') : '- Belum ada log sprint aktif.') +
     `\n\n#### 💬 Sesi Percakapan Aktif\n` +
     `- **Total Berkas Sesi:** ${sessionCount} berkas di \`sys-agents/sessions/\`\n` +
-    `- **Status Notulen:** Siap disintesis ke \`FINAL_MASTER_DOC.md\` & \`DOKUMEN_MASTER_INOVASI.md\`\n\n` +
+    `- **Status Notulen:** Siap disintesis ke \`FINAL_MASTER_DOC.md\`\n\n` +
     `> 💡 *Ketik \`/save [pesan]\` untuk menambah keputusan, atau \`/notulen\` untuk membuat sintesis dokumen final.*`;
 }
 
