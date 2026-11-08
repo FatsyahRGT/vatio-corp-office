@@ -776,11 +776,12 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     });
   }
 
-  function bubble(role, html, { text, attachments } = {}) {
+  function bubble(role, html, { text, rawText, attachments } = {}) {
     const wrap = document.createElement('div');
     wrap.className = `msg ${role}`;
     const b = document.createElement('div');
     b.className = 'bubble';
+    if (rawText) b.dataset.raw = rawText;
 
     if (role === 'user') {
       if (attachments && attachments.length > 0) {
@@ -828,6 +829,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       tools.className = 'tools';
       tools.innerHTML = `
         <button type="button" data-copy title="Salin teks">📋 Salin</button>
+        <button type="button" data-export="md" title="Download berkas Markdown (.md)">📝 MD</button>
         <button type="button" data-export="zip" title="Download Source Code / File Proyek (.zip)">📦 ZIP</button>
         <button type="button" data-export="ppt" title="Download Slide Presentasi (.html)">📽️ PPT</button>
         <button type="button" data-export="word" title="Download dokumen Word (.doc)">📄 Word</button>
@@ -845,6 +847,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     if (!l.el) return;
     const b = l.el.querySelector('.bubble');
     b.innerHTML = l.text ? renderMarkdown(l.text) : typingHtml;
+    if (l.text) b.dataset.raw = l.text;
     scrollDown();
   }
 
@@ -923,7 +926,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
         els.messages.appendChild(
           m.role === 'user'
             ? bubble('user', '', { text: m.rawText || m.content, attachments: m.attachments })
-            : bubble('assistant', renderMarkdown(m.content))
+            : bubble('assistant', renderMarkdown(m.content), { rawText: m.content })
         );
       }
       if (l) {
@@ -978,7 +981,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     const l = live.get(agentId);
     if (!history.length && !l) renderEmpty(agent);
     for (const m of history) {
-      els.messages.appendChild(m.role === 'user' ? bubble('user', '', { text: m.rawText || m.content, attachments: m.attachments }) : bubble('assistant', renderMarkdown(m.content)));
+      els.messages.appendChild(m.role === 'user' ? bubble('user', '', { text: m.rawText || m.content, attachments: m.attachments }) : bubble('assistant', renderMarkdown(m.content), { rawText: m.content }));
     }
     if (l) {
       l.el = bubble('assistant', typingHtml);
@@ -1116,7 +1119,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       });
       setHistory(id, [...sent, { role: 'assistant', content: full }]);
       live.delete(id);
-      if (l.el && currentId === id) l.el.querySelector('.bubble').innerHTML = renderMarkdown(full);
+      if (l.el && currentId === id) { const bEl = l.el.querySelector('.bubble'); bEl.innerHTML = renderMarkdown(full); bEl.dataset.raw = full; }
       activeTargets.forEach((pid) => onStatus(pid, 'done'));
     } catch (err) {
       live.delete(id);
@@ -1506,7 +1509,17 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
         }, 300);
       };
 
-      if (type === 'zip') {
+      if (type === 'md') {
+        const rawContent = bubbleEl.dataset.raw || bubbleEl.innerText;
+        const mdText = `# Catatan & Rekomendasi - Vatio Corp\n\n` +
+          `> **Disusun oleh:** ${agentTitle}  \n` +
+          `> **Tanggal:** ${new Date().toLocaleString('id-ID')}  \n\n` +
+          `---\n\n` +
+          rawContent;
+        const blob = new Blob([mdText], { type: 'text/markdown;charset=utf-8;' });
+        downloadBlob(blob, `Dokumen-${filePrefix}-${Date.now()}.md`);
+        flash(exportBtn, 'Tersimpan (.md)');
+      } else if (type === 'zip') {
         const zip = new JSZip();
         const codeBlocks = bubbleEl.querySelectorAll('pre code');
         let fileCount = 0;

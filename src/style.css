@@ -506,7 +506,7 @@ body.chatting #panel { transform: none; opacity: 1; pointer-events: auto; }
   font-size: 11px; padding: 3px 8px; cursor: pointer;
 }
 .bubble .copy:hover { background: rgba(255,255,255,.26); }
-.tools { display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
+.tools { display: flex; flex-wrap: wrap; gap: 4px; opacity: 0; transition: opacity .15s; }
 .msg:hover .tools, .msg:focus-within .tools { opacity: 1; }
 @media (hover: none) { .tools { opacity: 1; } }
 .tools button { border: 1px solid var(--line); background: var(--card-sidebar); color: var(--ink-soft); font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; transition: all .12s; }
