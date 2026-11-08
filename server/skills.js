@@ -24,6 +24,7 @@ const AGENT_SKILL_MAP = {
   fauzan: 'analyst/dfd-process.md',
   tari: 'analyst/erd-database.md',
   viona: 'analyst/prompt-agentic-ai.md',
+  raka: 'analyst/requirement-engineering.md',
   // Divisi lain
   laravel: 'laravel/clean-architecture.md',
   analyst: 'analyst/prd-and-specs.md',

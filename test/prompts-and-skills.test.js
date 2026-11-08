@@ -69,3 +69,17 @@ test('Prompts: Meeting Prompt Menyertakan Anggota Hadir & Konteks Rapat', () => 
   assert.ok(meetingPrompt.includes('Nadira Zahrani'), 'Harus menyertakan rekan rapat Nadira');
   assert.ok(meetingPrompt.includes('DOKUMEN JANGKAR SISTEM (SYSTEM_CONTEXT.MD)'), 'Meeting prompt harus tetap memuat SYSTEM_CONTEXT.md');
 });
+
+test('Skills: Raka Wijaya Memiliki SOP Requirement & Evaluasi Teknologi Mutakhir', () => {
+  const raka = agentById('raka');
+  const skillContent = getSkillForAgent(raka);
+
+  assert.ok(skillContent.includes('Raka Wijaya'), 'Harus menyebut nama Raka Wijaya');
+  assert.ok(skillContent.includes('Teknologi') && skillContent.includes('mutakhir'), 'Harus memuat mandat teknologi mutakhir');
+  assert.ok(skillContent.includes('Rekomendasi') || skillContent.includes('Needs-Driven'), 'Harus memuat rekomendasi sesuai kebutuhan');
+  assert.ok(skillContent.includes('Gherkin') || skillContent.includes('User Story'), 'Harus memuat standar user story & AC');
+
+  const prompt = buildSystemPrompt(raka);
+  assert.ok(prompt.includes('Raka Wijaya'), 'System prompt harus menyertakan nama Raka');
+  assert.ok(prompt.includes('mutakhir'), 'System prompt harus memuat skill teknologi mutakhir Raka');
+});

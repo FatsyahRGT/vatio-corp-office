@@ -19,7 +19,11 @@ export function rotateLogs() {
   if (fs.existsSync(sprintLog)) {
     const content = fs.readFileSync(sprintLog, 'utf-8');
     if (content.trim()) {
-      fs.renameSync(sprintLog, dest);
+      try {
+        fs.copyFileSync(sprintLog, dest);
+      } catch {
+        fs.renameSync(sprintLog, dest);
+      }
       console.log(`[Tiered Memory] Archived: ${dest}`);
     } else {
       console.log('[Tiered Memory] SPRINT_LOG.md kosong, melewati pemindahan file kosong.');
