@@ -448,9 +448,56 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     if (force || near) m.scrollTop = m.scrollHeight;
   };
 
+  let searchHighlightIndex = -1;
+
+  function selectAndFocus(agentId) {
+    onSelect(agentId);
+    setTimeout(() => {
+      if (els.input) {
+        els.input.focus();
+        const len = els.input.value.length;
+        els.input.setSelectionRange(len, len);
+      }
+    }, 60);
+  }
+
+  function highlightAgentItem(idx, focusElement = false) {
+    if (!els.agentList) return;
+    const items = Array.from(els.agentList.querySelectorAll('.agent-item'));
+    if (!items.length) {
+      searchHighlightIndex = -1;
+      return;
+    }
+    if (idx < 0) {
+      searchHighlightIndex = -1;
+      items.forEach((it) => {
+        it.classList.remove('highlighted');
+        it.removeAttribute('aria-selected');
+      });
+      return;
+    }
+    searchHighlightIndex = Math.max(0, Math.min(idx, items.length - 1));
+    items.forEach((it, i) => {
+      const isSel = i === searchHighlightIndex;
+      it.classList.toggle('highlighted', isSel);
+      if (isSel) {
+        it.setAttribute('aria-selected', 'true');
+        it.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        if (focusElement) it.focus({ preventScroll: true });
+      } else {
+        it.removeAttribute('aria-selected');
+      }
+    });
+  }
+
   function renderAgentList(filter = '') {
     if (!els.agentList) return;
     const q = filter.trim().toLowerCase();
+    const matchMeeting = !q || 'ruang rapat tim multi-agen grup group meeting forum'.includes(q);
+    if (els.openMeeting) {
+      els.openMeeting.style.display = matchMeeting ? '' : 'none';
+    }
+
     const filtered = AGENTS.filter((a) => {
       if (!q) return true;
       const div = divisionById(a.division);
@@ -464,17 +511,53 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       );
     });
 
+    if (q) {
+      filtered.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        const aStarts = nameA.startsWith(q);
+        const bStarts = nameB.startsWith(q);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+
+        const aInc = nameA.includes(q);
+        const bInc = nameB.includes(q);
+        if (aInc && !bInc) return -1;
+        if (!aInc && bInc) return 1;
+
+        const roleA = a.role.toLowerCase().includes(q);
+        const roleB = b.role.toLowerCase().includes(q);
+        if (roleA && !roleB) return -1;
+        if (!roleA && roleB) return 1;
+
+        return 0;
+      });
+    }
+
     els.agentList.innerHTML = '';
     if (filtered.length === 0) {
-      els.agentList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--ink-soft); font-size: 13px;">Tidak ada anggota yang cocok.</div>';
+      searchHighlightIndex = -1;
+      if (!matchMeeting) {
+        els.agentList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--ink-soft); font-size: 13px;">Tidak ada anggota yang cocok.</div>';
+      }
       return;
     }
 
-    filtered.forEach((a) => {
+    // Jika sedang mencari (q ada isinya), otomatis sorot hasil pertama agar Enter langsung memilihnya
+    searchHighlightIndex = q ? 0 : -1;
+
+    filtered.forEach((a, idx) => {
       const div = divisionById(a.division);
       const item = document.createElement('div');
-      item.className = `agent-item ${a.id === currentId ? 'active' : ''}`;
+      const isHighlighted = idx === searchHighlightIndex;
+      item.className = `agent-item ${a.id === currentId ? 'active' : ''} ${isHighlighted ? 'highlighted' : ''}`;
       item.dataset.id = a.id;
+      item.dataset.index = idx;
+      item.tabIndex = 0;
+      item.setAttribute('role', 'button');
+      item.setAttribute('aria-label', `${a.name}, ${a.role}`);
+      if (isHighlighted) item.setAttribute('aria-selected', 'true');
+
       item.innerHTML = `
         <div class="agent-item-avatar" style="--c: ${div.color}">
           ${initials(a.name)}
@@ -485,9 +568,37 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
           <div class="agent-item-div" style="--c: ${div.color}">${div.name}</div>
         </div>
       `;
-      item.addEventListener('click', () => {
-        onSelect(a.id);
+
+      item.addEventListener('mouseenter', () => {
+        highlightAgentItem(idx, false);
       });
+
+      item.addEventListener('click', () => {
+        selectAndFocus(a.id);
+      });
+
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          highlightAgentItem(idx + 1, true);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (idx > 0) {
+            highlightAgentItem(idx - 1, true);
+          } else {
+            highlightAgentItem(-1);
+            els.agentSearch?.focus();
+          }
+        } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          selectAndFocus(a.id);
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          highlightAgentItem(-1);
+          els.agentSearch?.focus();
+        }
+      });
+
       els.agentList.appendChild(item);
     });
   }
@@ -739,7 +850,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
         b.style.setProperty('--c', div.color);
         b.setAttribute('aria-current', String(m.id === agentId));
         b.innerHTML = `<i>${initials(m.name)}</i>${m.name.split(' ')[0]}`;
-        b.addEventListener('click', () => onSelect(m.id));
+        b.addEventListener('click', () => selectAndFocus(m.id));
         els.mates.appendChild(b);
       }
     }
@@ -973,6 +1084,14 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       }
     }
 
+    if (e.key === 'Escape' && !els.input.value.trim()) {
+      if (els.agentSearch) {
+        e.preventDefault();
+        els.agentSearch.focus();
+        return;
+      }
+    }
+
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       closeSlashPopup();
@@ -986,12 +1105,60 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     }
   });
 
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (!isExpanded) toggleExpand(true);
+      els.agentSearch?.focus();
+      els.agentSearch?.select();
+    }
+  });
+
   if (els.expand) {
     els.expand.addEventListener('click', () => toggleExpand());
   }
 
   if (els.agentSearch) {
     els.agentSearch.addEventListener('input', (e) => renderAgentList(e.target.value));
+
+    els.agentSearch.addEventListener('keydown', (e) => {
+      const items = els.agentList?.querySelectorAll('.agent-item') || [];
+      if (!items.length) {
+        if (e.key === 'Enter' && els.openMeeting && els.openMeeting.style.display !== 'none') {
+          e.preventDefault();
+          selectAndFocus('meeting');
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextIdx = searchHighlightIndex < 0 ? 0 : Math.min(searchHighlightIndex + 1, items.length - 1);
+        highlightAgentItem(nextIdx, true);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (searchHighlightIndex > 0) {
+          highlightAgentItem(searchHighlightIndex - 1, true);
+        } else {
+          highlightAgentItem(-1);
+          els.agentSearch.focus();
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const targetIdx = searchHighlightIndex >= 0 ? searchHighlightIndex : 0;
+        const targetEl = items[targetIdx];
+        if (targetEl && targetEl.dataset.id) {
+          selectAndFocus(targetEl.dataset.id);
+        }
+      } else if (e.key === 'Escape') {
+        if (els.agentSearch.value) {
+          e.preventDefault();
+          els.agentSearch.value = '';
+          renderAgentList('');
+          highlightAgentItem(-1);
+        }
+      }
+    });
   }
 
   if (els.attachBtn && els.fileInput) {
@@ -1125,13 +1292,13 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
 
   if (els.openMeeting) {
     els.openMeeting.addEventListener('click', () => {
-      onSelect('meeting');
+      selectAndFocus('meeting');
     });
   }
 
   if (els.topbarMeeting) {
     els.topbarMeeting.addEventListener('click', () => {
-      onSelect('meeting');
+      selectAndFocus('meeting');
     });
   }
 
@@ -1444,7 +1611,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
       if (isDemo()) document.getElementById('banner').hidden = false;
       setTimeout(() => {
         if (matchMedia('(hover: hover)').matches) els.input.focus({ preventScroll: true });
-      }, 350);
+      }, 80);
     },
     close() {
       currentId = null;

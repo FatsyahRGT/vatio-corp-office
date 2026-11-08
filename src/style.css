@@ -573,11 +573,31 @@ body.chatting #panel { transform: none; opacity: 1; pointer-events: auto; }
   gap: 12px;
   padding: 10px 14px;
   cursor: pointer;
-  transition: background .12s;
+  transition: background .12s, border-color .12s;
   border-left: 3px solid transparent;
+  outline: none;
+  user-select: none;
 }
 .agent-item:hover {
   background: var(--item-hover);
+}
+.agent-item.highlighted,
+.agent-item:focus-visible {
+  background: var(--item-active);
+  border-left-color: var(--c, var(--accent));
+  outline: none;
+}
+[data-theme='dark'] .agent-item.highlighted,
+[data-theme='dark'] .agent-item:focus-visible {
+  background: rgba(99, 102, 241, 0.16);
+  border-left-color: var(--c, #818cf8);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.28);
+}
+[data-theme='light'] .agent-item.highlighted,
+[data-theme='light'] .agent-item:focus-visible {
+  background: #e0e7ff;
+  border-left-color: var(--c, #4f46e5);
+  box-shadow: inset 0 0 0 1px rgba(79, 70, 229, 0.28);
 }
 .agent-item.active {
   background: var(--item-active);
