@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { agentById, divisionById } from '../shared/roster.js';
 import { buildSystemPrompt, buildMeetingPrompt } from './prompts.js';
-import { getClipping } from './context.js';
+import { getClipping, listContext, getMemoryStructureTable, getArchiveList } from './context.js';
 import { streamNineRouter, nineRouterBase } from './ninerouter.js';
 import { delegate, wantsDelegation } from './delegate.js';
 
@@ -126,12 +126,33 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
   });
   const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
 
-  // 9Router Hook: Protocol Tiered Memory 'load-clipping'
+  // 9Router Hook: Protocol Tiered Memory ('load-clipping', 'list-context', 'struktur memori', 'archive')
   const lastUserMsg = messages[messages.length - 1].content.trim();
+  const lowerMsg = lastUserMsg.toLowerCase();
+
+  let fastResponse = null;
   if (/^(load-clipping|\/load-clipping)/i.test(lastUserMsg)) {
     const arg = lastUserMsg.replace(/^(load-clipping|\/load-clipping)\s*/i, '').trim();
-    const clippingResponse = getClipping(arg);
-    send({ event: 'text', data: { text: clippingResponse } });
+    fastResponse = getClipping(arg);
+  } else if (/^(list-context|\/list-context)/i.test(lastUserMsg)) {
+    const arg = lastUserMsg.replace(/^(list-context|\/list-context)\s*/i, '').trim();
+    fastResponse = listContext(arg);
+  } else if (
+    lowerMsg.includes('struktur memori') ||
+    lowerMsg.includes('status memori')
+  ) {
+    fastResponse = getMemoryStructureTable();
+  } else if (
+    lowerMsg.includes('ada di archive') ||
+    lowerMsg.includes('daftar archive') ||
+    lowerMsg.includes('list-archive') ||
+    lowerMsg.includes('isi archive')
+  ) {
+    fastResponse = getArchiveList();
+  }
+
+  if (fastResponse) {
+    send({ event: 'text', data: { text: fastResponse } });
     send({ event: 'done', data: {} });
     res.end();
     return;

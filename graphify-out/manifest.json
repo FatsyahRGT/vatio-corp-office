@@ -1,8 +1,8 @@
 {
   "package.json": {
-    "mtime": 1794116272.8035822,
-    "seen": 1794116323.899452,
-    "ast_hash": "be659d3318f5e223d3cad51177d90263",
+    "mtime": 1794116604.136904,
+    "seen": 1794116762.5205154,
+    "ast_hash": "929fa277b67fa1af328a73ccc2a94fdd",
     "semantic_hash": ""
   },
   "server/delegate.js": {
@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "server/index.js": {
-    "mtime": 1794116172.8303647,
-    "seen": 1794116323.899452,
-    "ast_hash": "e65176b11a8ff6c79f7840cf21b898ac",
+    "mtime": 1794116665.4405365,
+    "seen": 1794116762.5205154,
+    "ast_hash": "0c26866afa1537362fcf66e49f4d22de",
     "semantic_hash": ""
   },
   "server/prompts.js": {
@@ -282,15 +282,15 @@
     "semantic_hash": ""
   },
   "server/context.js": {
-    "mtime": 1794116138.1148093,
-    "seen": 1794116323.899452,
-    "ast_hash": "edaff2191d3df8fdd863eabfc7f2dabf",
+    "mtime": 1794116729.0856895,
+    "seen": 1794116762.5205154,
+    "ast_hash": "727f8a2dcace7c44e8f9843275c338ff",
     "semantic_hash": ""
   },
   "SYSTEM_CONTEXT.md": {
-    "mtime": 1794116297.070291,
-    "seen": 1794116323.899452,
-    "ast_hash": "47523b3f73732654816ffe0ada7c85ce",
+    "mtime": 1794116740.4806838,
+    "seen": 1794116762.5205154,
+    "ast_hash": "531c920ae93ed20e504f5ddd929b02f8",
     "semantic_hash": ""
   },
   "test/context-sync.test.js": {
@@ -324,27 +324,45 @@
     "semantic_hash": ""
   },
   "test/tiered-memory.test.js": {
-    "mtime": 1794116289.6253967,
-    "seen": 1794116323.899452,
-    "ast_hash": "07f01f99b077edd6506e44bc752cd4d2",
+    "mtime": 1794116710.5456994,
+    "seen": 1794116762.5205154,
+    "ast_hash": "eee95f55b6ae0862c560c526cfe63804",
     "semantic_hash": ""
   },
   "sys-agents/SPRINT_LOG.md": {
-    "mtime": 1794116297.2737548,
-    "seen": 1794116323.899452,
+    "mtime": 1794116740.8023965,
+    "seen": 1794116762.5205154,
     "ast_hash": "17f41c78231392db9a7e39dc99e587ee",
     "semantic_hash": ""
   },
   "sys-agents/SYSTEM_CONTEXT.md": {
-    "mtime": 1794116297.070291,
-    "seen": 1794116323.899452,
+    "mtime": 1794116740.4806838,
+    "seen": 1794116762.5205154,
     "ast_hash": "77e2e40c25be8944e7077aa08fa9095e",
     "semantic_hash": ""
   },
   "sys-agents/archive/HISTORY_2026-11-08.md": {
-    "mtime": 1794116297.2638235,
-    "seen": 1794116323.899452,
+    "mtime": 1794116740.7806766,
+    "seen": 1794116762.5205154,
     "ast_hash": "b205d3024071875ebb6f26edf9f86e7e",
+    "semantic_hash": ""
+  },
+  "sys-agents/check-status.js": {
+    "mtime": 1794116567.4243906,
+    "seen": 1794116762.5205154,
+    "ast_hash": "3db476a778c6056a724774a56b1ae7db",
+    "semantic_hash": ""
+  },
+  "sys-agents/check-status.ps1": {
+    "mtime": 1794116557.4635377,
+    "seen": 1794116762.5205154,
+    "ast_hash": "4a7d05dd4df7e68ac782d5b641b2a4e4",
+    "semantic_hash": ""
+  },
+  "sys-agents/check-status.sh": {
+    "mtime": 1794116549.774595,
+    "seen": 1794116762.5205154,
+    "ast_hash": "fa516276311e39945dd1ed5d61b6636d",
     "semantic_hash": ""
   },
   "package-lock.json": {

@@ -3,7 +3,13 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getSystemContext, getClipping } from '../server/context.js';
+import {
+  getSystemContext,
+  getClipping,
+  listContext,
+  getMemoryStructureTable,
+  getArchiveList,
+} from '../server/context.js';
 import { rotateLogs } from '../sys-agents/rotate-logs.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -11,11 +17,17 @@ const ROOT_DIR = resolve(__dirname, '..');
 const TIER1_PATH = resolve(ROOT_DIR, 'sys-agents/SYSTEM_CONTEXT.md');
 const TIER2_PATH = resolve(ROOT_DIR, 'sys-agents/SPRINT_LOG.md');
 const ARCHIVE_DIR = resolve(ROOT_DIR, 'sys-agents/archive');
+const CHECK_SH = resolve(ROOT_DIR, 'sys-agents/check-status.sh');
+const CHECK_PS1 = resolve(ROOT_DIR, 'sys-agents/check-status.ps1');
+const CHECK_JS = resolve(ROOT_DIR, 'sys-agents/check-status.js');
 
 test('Tiered Memory: Direktori dan File Master Blueprint (Tier 1 & Tier 2) Terbentuk', () => {
   assert.ok(existsSync(TIER1_PATH), 'sys-agents/SYSTEM_CONTEXT.md harus ada');
   assert.ok(existsSync(TIER2_PATH), 'sys-agents/SPRINT_LOG.md harus ada');
   assert.ok(existsSync(ARCHIVE_DIR), 'sys-agents/archive/ harus ada');
+  assert.ok(existsSync(CHECK_SH), 'sys-agents/check-status.sh harus ada');
+  assert.ok(existsSync(CHECK_PS1), 'sys-agents/check-status.ps1 harus ada');
+  assert.ok(existsSync(CHECK_JS), 'sys-agents/check-status.js harus ada');
 
   const tier1Content = readFileSync(TIER1_PATH, 'utf-8');
   assert.ok(tier1Content.includes('Vatio Corp: Master Blueprint (Tier 1)'), 'Harus memiliki header Tier 1');
@@ -43,6 +55,32 @@ test('Tiered Memory: getClipping Mengembalikan Index Blueprint dan Detail ID', (
 
   const infraClipping = getClipping('INFRA-01');
   assert.ok(infraClipping.includes('9Router Clipping: [INFRA-01]'), 'Harus mengembalikan clipping spesifik INFRA-01');
+});
+
+test('Tiered Memory: listContext Memfilter Kategori Berdasarkan ID', () => {
+  const techOnly = listContext('TECH');
+  assert.ok(techOnly.includes('TECH-01'), 'Harus memuat TECH-01');
+  assert.ok(!techOnly.includes('CORE-01'), 'Tidak boleh memuat CORE-01');
+
+  const all = listContext('');
+  assert.ok(all.includes('CORE-01'), 'Harus memuat CORE-01');
+  assert.ok(all.includes('TECH-01'), 'Harus memuat TECH-01');
+  assert.ok(all.includes('INFRA-01'), 'Harus memuat INFRA-01');
+});
+
+test('Tiered Memory: getMemoryStructureTable Mengembalikan Tabel Markdown Rapi', () => {
+  const table = getMemoryStructureTable();
+  assert.ok(table.includes('Struktur Memori Vatio Corp Saat Ini'), 'Harus memiliki judul tabel');
+  assert.ok(table.includes('| Tingkatan (Tier) | Berkas | Ukuran | Terakhir Diperbarui | Peran & Deskripsi |'), 'Harus memiliki header tabel');
+  assert.ok(table.includes('Tier 1 (Master Blueprint)'), 'Harus memuat baris Tier 1');
+  assert.ok(table.includes('Tier 2 (Working Memory)'), 'Harus memuat baris Tier 2');
+  assert.ok(table.includes('Tier 3 (Cold Archive)'), 'Harus memuat baris Tier 3');
+});
+
+test('Tiered Memory: getArchiveList Mengembalikan Daftar Arsip Mingguan', () => {
+  const archiveList = getArchiveList();
+  assert.ok(archiveList.includes('Cold Archive Vatio Corp'), 'Harus memiliki header arsip');
+  assert.ok(archiveList.includes('HISTORY_'), 'Harus memuat nama berkas arsip');
 });
 
 test('Tiered Memory: Log Rotation Mengarsipkan SPRINT_LOG.md ke Cold Archive', () => {

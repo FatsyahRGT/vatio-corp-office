@@ -12,7 +12,8 @@
     "context:sync": "node scripts/sync-context.js",
     "test": "node --test test/**/*.test.js",
     "start": "node server/index.js",
-    "logs:rotate": "node sys-agents/rotate-logs.js"
+    "logs:rotate": "node sys-agents/rotate-logs.js",
+    "status:memory": "node sys-agents/check-status.js"
   },
   "dependencies": {
     "dotenv": "latest",
