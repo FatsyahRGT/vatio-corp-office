@@ -1144,8 +1144,18 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
   }
 
   function autosize() {
-    els.input.style.height = 'auto';
-    els.input.style.height = `${Math.min(els.input.scrollHeight, 160)}px`;
+    els.input.style.height = '44px';
+    const val = els.input.value;
+    if (!val || !val.trim()) {
+      els.input.style.height = '44px';
+      return;
+    }
+    const scrollH = els.input.scrollHeight;
+    if (scrollH <= 46) {
+      els.input.style.height = '44px';
+    } else {
+      els.input.style.height = Math.min(scrollH, 160) + 'px';
+    }
   }
 
   // ---------- event ----------
@@ -1742,6 +1752,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     open(agentId) {
       currentId = agentId;
       render(agentId);
+      autosize();
       if (isDemo()) document.getElementById('banner').hidden = false;
       setTimeout(() => {
         if (matchMedia('(hover: hover)').matches) els.input.focus({ preventScroll: true });
