@@ -15,42 +15,41 @@ export function syncGraphifyToContext() {
     return false;
   }
 
-  if (!existsSync(REPORT_PATH) && !existsSync(GRAPH_JSON_PATH)) {
-    console.warn('⚠️ graphify-out belum dibuat. Jalankan /graphify terlebih dahulu.');
-    return false;
-  }
-
   let reportText = '';
   if (existsSync(REPORT_PATH)) {
     reportText = readFileSync(REPORT_PATH, 'utf-8');
+  } else if (!existsSync(GRAPH_JSON_PATH)) {
+    console.log('ℹ️ graphify-out belum dibuat. Menggunakan baseline topologi standar (reset pabrik).');
   }
 
   // Ekstrak data dari GRAPH_REPORT.md jika ada
   const today = new Date().toISOString().slice(0, 10);
-  let summaryLine = 'Topology terdeteksi';
+  let summaryLine = 'Topology terdeteksi (Baseline)';
   let godNodesList = [];
   let cyclesInfo = '0 (Decoupled & bersih)';
 
-  const summaryMatch = reportText.match(/## Summary\s*\n-\s*([^\n]+)/);
-  if (summaryMatch) {
-    summaryLine = summaryMatch[1];
-  }
-
-  const godsMatch = reportText.match(/## God Nodes[^\n]*\n([\s\S]*?)(?=\n##|\Z)/);
-  if (godsMatch) {
-    const rawGods = godsMatch[1]
-      .split('\n')
-      .map((l) => l.trim())
-      .filter((l) => l.startsWith('1.') || l.startsWith('2.') || l.startsWith('3.') || l.startsWith('4.') || l.startsWith('5.'))
-      .slice(0, 5);
-    if (rawGods.length > 0) {
-      godNodesList = rawGods;
+  if (reportText) {
+    const summaryMatch = reportText.match(/## Summary\s*\n-\s*([^\n]+)/);
+    if (summaryMatch) {
+      summaryLine = summaryMatch[1];
     }
-  }
 
-  const cyclesMatch = reportText.match(/## Import Cycles\s*\n-?\s*([^\n]+)/);
-  if (cyclesMatch) {
-    cyclesInfo = cyclesMatch[1];
+    const godsMatch = reportText.match(/## God Nodes[^\n]*\n([\s\S]*?)(?=\n##|\Z)/);
+    if (godsMatch) {
+      const rawGods = godsMatch[1]
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l.startsWith('1.') || l.startsWith('2.') || l.startsWith('3.') || l.startsWith('4.') || l.startsWith('5.'))
+        .slice(0, 5);
+      if (rawGods.length > 0) {
+        godNodesList = rawGods;
+      }
+    }
+
+    const cyclesMatch = reportText.match(/## Import Cycles\s*\n-?\s*([^\n]+)/);
+    if (cyclesMatch) {
+      cyclesInfo = cyclesMatch[1];
+    }
   }
 
   const godNodesFormatted = godNodesList.length > 0
@@ -93,7 +92,7 @@ ${godNodesFormatted}
     writeFileSync(TIER1_PATH, tier1Content, 'utf-8');
   }
 
-  console.log('✅ SYSTEM_CONTEXT.md (Root & Tier 1) berhasil disinkronkan dengan data Graphify terbaru!');
+  console.log('✅ SYSTEM_CONTEXT.md (Root & Tier 1) berhasil disinkronkan dengan data Graphify!');
   return true;
 }
 
