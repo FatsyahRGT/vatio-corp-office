@@ -79,7 +79,11 @@ test('Skills: Raka Wijaya Memiliki SOP Requirement & Evaluasi Teknologi Mutakhir
   assert.ok(skillContent.includes('Rekomendasi') || skillContent.includes('Needs-Driven'), 'Harus memuat rekomendasi sesuai kebutuhan');
   assert.ok(skillContent.includes('Gherkin') || skillContent.includes('User Story'), 'Harus memuat standar user story & AC');
 
+  assert.ok(skillContent.includes('Pros & Cons') || skillContent.includes('Pros-Cons'), 'Harus memuat analisis perbandingan pros & cons');
+  assert.ok(skillContent.includes('Opsi Alternatif') || skillContent.includes('Opsi B'), 'Harus memuat opsi arsitektur alternatif');
+
   const prompt = buildSystemPrompt(raka);
   assert.ok(prompt.includes('Raka Wijaya'), 'System prompt harus menyertakan nama Raka');
   assert.ok(prompt.includes('mutakhir'), 'System prompt harus memuat skill teknologi mutakhir Raka');
+  assert.ok(prompt.includes('Pros') || prompt.includes('alternatif'), 'System prompt harus memuat arahan pros-cons dan alternatif');
 });
