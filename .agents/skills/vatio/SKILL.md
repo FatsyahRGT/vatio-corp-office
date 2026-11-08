@@ -17,7 +17,7 @@ Pak Fatsyah dapat menjalankan perintah berikut langsung di chat Antigravity:
 | :--- | :--- | :--- |
 | `/save [teks]` | Menyimpan keputusan aktif ke Sprint Memory & Log Divisi | Append ke `sys-agents/SPRINT_LOG.md` dan log divisi terkait (`tech-logs.md`, `biz-logs.md`, atau `venture-logs.md`). |
 | `/share-memory` | Sinkronisasi memori kerja lintas divisi | Baca `sys-agents/SYSTEM_CONTEXT.md` (Tier 1) dan `sys-agents/SPRINT_LOG.md` (Tier 2), lalu tampilkan status sinkronisasi. |
-| `/notulen` | Menjalankan sintesis Notulen Pusat | Jalankan `node sys-agents/notulen-master.js` untuk membuat `FINAL_MASTER_DOC.md` & `DOKUMEN_MASTER_INOVASI.md`. |
+| `/notulen` | Menjalankan sintesis Notulen Pusat | Jalankan `node sys-agents/notulen-master.js` untuk membuat `FINAL_MASTER_DOC.md`. |
 | `/topologi` | Memeriksa topologi sistem & god nodes | Jalankan `node scripts/sync-context.js` dan laporkan god nodes aktif serta skala dependensi. |
 | `/status-memori` | Menampilkan matriks struktur memori | Baca struktur memori 3-tier (Tier 1 Blueprint, Tier 2 Sprint, Tier 3 Cold Archive). |
 | `/reset-sessions` | Membersihkan berkas sesi percakapan agen | Jalankan fungsi `clearAllSessions()` dari `sys-agents/session-manager.js`. |
@@ -43,7 +43,7 @@ Pak Fatsyah dapat menjalankan perintah berikut langsung di chat Antigravity:
 
 ### C. Prosedur `/notulen`
 1. Jalankan `node sys-agents/notulen-master.js`.
-2. Periksa apakah `FINAL_MASTER_DOC.md` dan `DOKUMEN_MASTER_INOVASI.md` berhasil diperbarui.
+2. Periksa apakah `FINAL_MASTER_DOC.md` berhasil diperbarui.
 3. Tampilkan cuplikan Matriks Harmonisasi Keputusan Lintas Divisi kepada Pak Fatsyah.
 
 ### D. Prosedur `/topologi`
