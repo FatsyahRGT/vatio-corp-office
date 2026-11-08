@@ -13,7 +13,8 @@
     "test": "node --test test/**/*.test.js",
     "start": "node server/index.js",
     "logs:rotate": "node sys-agents/rotate-logs.js",
-    "status:memory": "node sys-agents/check-status.js"
+    "status:memory": "node sys-agents/check-status.js",
+    "notulen:merge": "node sys-agents/notulen-master.js"
   },
   "dependencies": {
     "dotenv": "latest",

@@ -1,8 +1,8 @@
 {
   "package.json": {
-    "mtime": 1794116604.136904,
-    "seen": 1794116762.5205154,
-    "ast_hash": "929fa277b67fa1af328a73ccc2a94fdd",
+    "mtime": 1794116922.3890276,
+    "seen": 1794117161.887293,
+    "ast_hash": "47e273072ad7a5d66ad25127467663ae",
     "semantic_hash": ""
   },
   "server/delegate.js": {
@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "server/index.js": {
-    "mtime": 1794116665.4405365,
-    "seen": 1794116762.5205154,
-    "ast_hash": "0c26866afa1537362fcf66e49f4d22de",
+    "mtime": 1794116995.2005694,
+    "seen": 1794117161.887293,
+    "ast_hash": "f3a84fa6b5c91749b92f58224b134792",
     "semantic_hash": ""
   },
   "server/prompts.js": {
@@ -282,15 +282,15 @@
     "semantic_hash": ""
   },
   "server/context.js": {
-    "mtime": 1794116729.0856895,
-    "seen": 1794116762.5205154,
-    "ast_hash": "727f8a2dcace7c44e8f9843275c338ff",
+    "mtime": 1794116961.1805575,
+    "seen": 1794117161.887293,
+    "ast_hash": "04a0d4ecd6ae51a456875f8efa3c5891",
     "semantic_hash": ""
   },
   "SYSTEM_CONTEXT.md": {
-    "mtime": 1794116740.4806838,
-    "seen": 1794116762.5205154,
-    "ast_hash": "531c920ae93ed20e504f5ddd929b02f8",
+    "mtime": 1794117069.3784494,
+    "seen": 1794117161.887293,
+    "ast_hash": "d87ba30cc285b24e2df10dd95e73b603",
     "semantic_hash": ""
   },
   "test/context-sync.test.js": {
@@ -330,20 +330,20 @@
     "semantic_hash": ""
   },
   "sys-agents/SPRINT_LOG.md": {
-    "mtime": 1794116740.8023965,
-    "seen": 1794116762.5205154,
+    "mtime": 1794117070.47735,
+    "seen": 1794117161.8882911,
     "ast_hash": "17f41c78231392db9a7e39dc99e587ee",
     "semantic_hash": ""
   },
   "sys-agents/SYSTEM_CONTEXT.md": {
-    "mtime": 1794116740.4806838,
-    "seen": 1794116762.5205154,
+    "mtime": 1794117069.4220593,
+    "seen": 1794117161.8882911,
     "ast_hash": "77e2e40c25be8944e7077aa08fa9095e",
     "semantic_hash": ""
   },
   "sys-agents/archive/HISTORY_2026-11-08.md": {
-    "mtime": 1794116740.7806766,
-    "seen": 1794116762.5205154,
+    "mtime": 1794117070.4554248,
+    "seen": 1794117161.8882911,
     "ast_hash": "b205d3024071875ebb6f26edf9f86e7e",
     "semantic_hash": ""
   },
@@ -363,6 +363,48 @@
     "mtime": 1794116549.774595,
     "seen": 1794116762.5205154,
     "ast_hash": "fa516276311e39945dd1ed5d61b6636d",
+    "semantic_hash": ""
+  },
+  "sys-agents/notulen-master.js": {
+    "mtime": 1794116898.2736878,
+    "seen": 1794117161.887293,
+    "ast_hash": "f7f8d1e9657326a90aee183dcdb141b3",
+    "semantic_hash": ""
+  },
+  "test/notulen-master.test.js": {
+    "mtime": 1794117040.9499009,
+    "seen": 1794117161.887293,
+    "ast_hash": "f4b8cbf160be2454d3c4e24771ad9782",
+    "semantic_hash": ""
+  },
+  "DOKUMEN_VALID_HACKATHON.md": {
+    "mtime": 1794117069.9607213,
+    "seen": 1794117161.887293,
+    "ast_hash": "574ca659485c70287fffbae92a558986",
+    "semantic_hash": ""
+  },
+  "FINAL_MASTER_DOC.md": {
+    "mtime": 1794117069.872143,
+    "seen": 1794117161.887293,
+    "ast_hash": "574ca659485c70287fffbae92a558986",
+    "semantic_hash": ""
+  },
+  "sys-agents/biz-logs.md": {
+    "mtime": 1794116863.9935365,
+    "seen": 1794117161.8882911,
+    "ast_hash": "fa55cfdac3a7621b371903de47d6702f",
+    "semantic_hash": ""
+  },
+  "sys-agents/tech-logs.md": {
+    "mtime": 1794116858.042806,
+    "seen": 1794117161.8882911,
+    "ast_hash": "0d0944465cfeb1eef1dcc9a68b1319da",
+    "semantic_hash": ""
+  },
+  "sys-agents/venture-logs.md": {
+    "mtime": 1794116874.6199615,
+    "seen": 1794117161.8882911,
+    "ast_hash": "ca4a5c2fb353add4ce155fa5d99ad2cd",
     "semantic_hash": ""
   },
   "package-lock.json": {

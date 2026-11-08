@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { agentById, divisionById } from '../shared/roster.js';
 import { buildSystemPrompt, buildMeetingPrompt } from './prompts.js';
-import { getClipping, listContext, getMemoryStructureTable, getArchiveList } from './context.js';
+import { getClipping, listContext, getMemoryStructureTable, getArchiveList, synthesizeNotulen } from './context.js';
 import { streamNineRouter, nineRouterBase } from './ninerouter.js';
 import { delegate, wantsDelegation } from './delegate.js';
 
@@ -149,6 +149,14 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
     lowerMsg.includes('isi archive')
   ) {
     fastResponse = getArchiveList();
+  } else if (
+    lowerMsg.includes('gabungkan semua hasil diskusi') ||
+    lowerMsg.includes('sintesis notulen') ||
+    lowerMsg.includes('notulen-merge') ||
+    lowerMsg.includes('dokumen tunggal yang valid') ||
+    /^(notulen-merge|\/notulen)/i.test(lastUserMsg)
+  ) {
+    fastResponse = synthesizeNotulen();
   }
 
   if (fastResponse) {

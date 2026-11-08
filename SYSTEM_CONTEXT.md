@@ -18,7 +18,7 @@ Dokumen ini adalah **Single Source of Truth (Dokumen Jangkar)** yang dibaca oleh
 ## 2. Graphify Analysis Summary
 *(Bagian ini otomatis diperbarui oleh Graphify Sync pada 2026-11-08)*
 - **Date Last Scan:** 2026-11-08
-- **Topology Scale:** 290 nodes · 579 edges · 11 communities (9 shown, 2 thin omitted)
+- **Topology Scale:** 310 nodes · 614 edges · 18 communities (16 shown, 2 thin omitted)
 - **God Nodes (Pusat Beban Sistem):**
   1. `createPanel()` - 40 edges
   2. `box()` - 34 edges

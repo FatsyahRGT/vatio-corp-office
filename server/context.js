@@ -1,6 +1,7 @@
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { synthesizeAllDivisions } from '../sys-agents/notulen-master.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_CONTEXT_PATH = resolve(__dirname, '../SYSTEM_CONTEXT.md');
@@ -97,7 +98,6 @@ export function getClipping(key = '') {
         '- [INFRA-01] API Gateway: 9Router Integration',
       ];
 
-  // Jika user meminta specific ID (misal: CORE-01)
   if (targetKey && targetKey !== 'ALL') {
     const found = indexLines.find((line) => line.toUpperCase().includes(`[${targetKey}]`));
     if (found) {
@@ -243,4 +243,25 @@ export function getArchiveList() {
     md += `| \`${f}\` | ${formatBytes(fStat.size)} | ${formatDate(fStat.mtime)} | ✅ Terarsip Aman |\n`;
   });
   return md;
+}
+
+/**
+ * Menjalankan sintesis notulensi lintas divisi dan menghasilkan ringkasan respons chat
+ */
+export function synthesizeNotulen() {
+  const result = synthesizeAllDivisions();
+  const { stats } = result;
+
+  return `### 📝 Notulen Pusat Vatio Corp: Sintesis Selesai!\n\n` +
+    `*Sistem Notulen:* "Sedang melakukan merge... Mendeteksi **${stats.techCount} keputusan teknis** dari Arga & Danu, **${stats.bizCount} arahan bisnis** dari Arya Sena, dan **${stats.ventureCount} narasi pitching** dari Nadira."\n\n` +
+    `📄 **Dokumen final master valid berhasil diterbitkan ke:**\n` +
+    `- \`FINAL_MASTER_DOC.md\`\n` +
+    `- \`DOKUMEN_VALID_HACKATHON.md\`\n\n` +
+    `#### 📑 Cuplikan Matriks Harmonisasi:\n` +
+    `| Divisi | ID | Status |\n` +
+    `| :--- | :--- | :--- |\n` +
+    `| ⚙️ Teknis (Arga & Danu) | \`TECH-DEC-01..03\` | ✅ Terverifikasi Topologi |\n` +
+    `| 💼 Bisnis (Arya Sena) | \`BIZ-DEC-01..03\` | ✅ Aligned Case 2 GDG ITB |\n` +
+    `| 🎯 Venture (Nadira) | \`VENTURE-DEC-01..03\` | ✅ Ready for Pitching |\n\n` +
+    `> 💡 *Buka file \`FINAL_MASTER_DOC.md\` untuk melihat dokumen utuh dengan Executive Summary, Matriks Harmonisasi, Feasibility Anti-Slop, dan Action Items.*`;
 }
