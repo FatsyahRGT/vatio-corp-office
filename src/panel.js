@@ -1041,6 +1041,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     if (!currentId) return;
     live.get(currentId)?.abort.abort();
     clearHistory(currentId);
+    fetch('/api/sessions/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ agentId: currentId }) }).catch(() => {});
     render(currentId);
   });
 
@@ -1057,6 +1058,7 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     live.clear();
     clearAllHistory();
     clearHistory('meeting');
+    fetch('/api/sessions/reset-all', { method: 'POST' }).catch(() => {});
     pendingAttachments = [];
     renderAttachmentPreview();
     if (currentId) {

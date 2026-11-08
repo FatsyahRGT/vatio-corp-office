@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { agentById, divisionById } from '../shared/roster.js';
 import { buildSystemPrompt, buildMeetingPrompt } from './prompts.js';
-import { getClipping, listContext, getMemoryStructureTable, getArchiveList, synthesizeNotulen } from './context.js';
+import { getClipping, listContext, getMemoryStructureTable, getArchiveList, synthesizeNotulen, deleteAgentSession, clearAllSessions, deleteContextId, triggerLogRotation } from './context.js';
 import { streamNineRouter, nineRouterBase } from './ninerouter.js';
 import { delegate, wantsDelegation } from './delegate.js';
 
@@ -94,6 +94,17 @@ app.get('/api/config', (req, res) => {
 
 app.get('/api/verify', requireAccess, (req, res) => res.json({ ok: true }));
 
+app.post('/api/sessions/reset', requireAccess, (req, res) => {
+  const { agentId } = req.body || {};
+  const out = deleteAgentSession(agentId || 'meeting');
+  res.json(out);
+});
+
+app.post('/api/sessions/reset-all', requireAccess, (req, res) => {
+  const out = clearAllSessions();
+  res.json(out);
+});
+
 app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
   const { agentId, participantIds, crossContext, messages: rawMessages } = req.body || {};
   const isMeeting = agentId === 'meeting';
@@ -157,6 +168,32 @@ app.post('/api/chat', requireAccess, rateLimit, dailyCap, async (req, res) => {
     /^(notulen-merge|\/notulen)/i.test(lastUserMsg)
   ) {
     fastResponse = synthesizeNotulen();
+  } else if (/^(delete-context|\/delete-context)/i.test(lastUserMsg)) {
+    const cid = lastUserMsg.replace(/^(delete-context|\/delete-context)\s*/i, '').trim();
+    const result = deleteContextId(cid);
+    fastResponse = `### 🗑️ Hapus Konteks Master Blueprint\n\n${result.message}`;
+  } else if (
+    lowerMsg === 'reset sesi ini' ||
+    lowerMsg === 'reset sesi' ||
+    lowerMsg === '/reset-sesi'
+  ) {
+    const aName = agent ? agent.id : (isMeeting ? 'meeting' : 'agent');
+    deleteAgentSession(aName);
+    fastResponse = `### 🔄 Reset Sesi Berhasil\n\nSesi percakapan dengan **${agent ? agent.name : 'Ruang Rapat'}** telah dikosongkan. Siap memulai topik baru!`;
+  } else if (
+    lowerMsg === 'reset semua sesi agen' ||
+    lowerMsg === 'reset semua sesi' ||
+    lowerMsg === '/reset-all-sessions'
+  ) {
+    const result = clearAllSessions();
+    fastResponse = `### 🧹 Hard Reset Sesi Agen\n\nSeluruh sesi percakapan semua agen (${result.count} berkas sesi) telah dibersihkan dari \`/sys-agents/sessions/\`.`;
+  } else if (
+    lowerMsg === 'jalankan log rotation' ||
+    lowerMsg === 'rotasi log' ||
+    lowerMsg === '/rotate-logs'
+  ) {
+    const result = triggerLogRotation();
+    fastResponse = `### 📦 Log Rotation Berhasil Dijalankan\n\nLog kerja sprint aktif telah diarsipkan ke \`/sys-agents/archive/\` dan berkas \`SPRINT_LOG.md\` baru telah disiapkan.`;
   }
 
   if (fastResponse) {

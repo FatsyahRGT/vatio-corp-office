@@ -35,10 +35,12 @@ dist-ssr/
 *.local
 
 # ------------------------------------------------------------------------------
-# 5. Tiered Memory Cold Archive (Log Mingguan Lokal Pengguna)
+# 5. Tiered Memory Cold Archive & Agent Sessions (Generated Lokal Pengguna)
 # ------------------------------------------------------------------------------
 sys-agents/archive/*.md
 !sys-agents/archive/.gitkeep
+sys-agents/sessions/*.md
+!sys-agents/sessions/.gitkeep
 
 # ------------------------------------------------------------------------------
 # 6. Runtime Logs, PID & Debuggers

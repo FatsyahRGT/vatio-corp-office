@@ -1,3 +1,11 @@
+import {
+  saveAgentSession,
+  loadAgentSession,
+  deleteAgentSession,
+  clearAllSessions,
+  deleteContextId,
+  triggerLogRotation,
+} from '../sys-agents/session-manager.js';
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -265,3 +273,12 @@ export function synthesizeNotulen() {
     `| 🎯 Venture (Nadira) | \`VENTURE-DEC-01..03\` | ✅ Ready for Pitching |\n\n` +
     `> 💡 *Buka file \`FINAL_MASTER_DOC.md\` untuk melihat dokumen utuh dengan Executive Summary, Matriks Harmonisasi, Feasibility Anti-Slop, dan Action Items.*`;
 }
+
+export {
+  saveAgentSession,
+  loadAgentSession,
+  deleteAgentSession,
+  clearAllSessions,
+  deleteContextId,
+  triggerLogRotation,
+};
