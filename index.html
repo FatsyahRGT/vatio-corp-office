@@ -14,13 +14,31 @@
   <div id="stage"><canvas id="scene" aria-label="Kantor Vatio Corp 3D"></canvas></div>
   <div id="tags" aria-hidden="true"></div>
 
-  <header id="topbar">
+  <header id="topbar" class="nav-sidebar">
     <div class="brand">
-      <span class="brand-mark"></span>
-      <div><strong>Vatio Corp</strong><small>Innovation Technology Corporation</small></div>
+      <div class="brand-title">
+        <span class="brand-mark"></span>
+        <div><strong>Vatio Corp</strong><small>Innovation Technology Corporation</small></div>
+      </div>
+      <button id="btn-theme-toggle" class="theme-toggle-btn" title="Ganti Tema (Gelap / Terang)" aria-label="Ganti Tema">
+        <svg id="theme-toggle-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
     </div>
     <button id="btn-topbar-meeting" class="meeting-topbar-btn" title="Buka Ruang Rapat Tim (Multi-Agen)">🎙️ Ruang Rapat</button>
-    <nav id="chips" aria-label="Divisi"></nav>
+    <div class="nav-sidebar-section">
+      <span class="nav-sidebar-heading">Pilih Divisi & Ruangan</span>
+      <nav id="chips" aria-label="Divisi"></nav>
+    </div>
   </header>
 
   <div id="banner" hidden></div>

@@ -38,6 +38,32 @@ for (const c of chipDefs) {
   chipsEl.appendChild(b);
 }
 
+// ---------- tema (gelap / terang) ----------
+const themeBtn = $('btn-theme-toggle');
+const SUN_ICON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+const MOON_ICON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem('kantorai.theme', t); } catch {}
+  if (themeBtn) {
+    themeBtn.innerHTML = t === 'dark' ? SUN_ICON : MOON_ICON;
+    themeBtn.title = t === 'dark' ? 'Ganti ke Tema Terang' : 'Ganti ke Tema Gelap (Anti-Silau)';
+  }
+}
+const initialTheme = (function() {
+  try { return localStorage.getItem('kantorai.theme') || 'dark'; } catch { return 'dark'; }
+})();
+setTheme(initialTheme);
+themeBtn?.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// Tombol Ruang Rapat di topbar / sidebar
+$('btn-topbar-meeting')?.addEventListener('click', () => selectAgent('meeting'));
+
+
 function markChip(id) {
   for (const b of chipsEl.children) b.setAttribute('aria-pressed', String(b.dataset.id === id));
   const active = chipsEl.querySelector(`[aria-pressed="true"]`);
@@ -60,10 +86,20 @@ function goTo(id) {
 
 // ---------- panel chat ----------
 function setInset() {
-  if (!selectedId) return stage.setInset(0, 0);
+  if (mobile.matches) {
+    if (!selectedId) return stage.setInset(0, 0);
+    const el = $('panel');
+    return stage.setInset(0, el.offsetHeight);
+  }
   const el = $('panel');
-  if (mobile.matches) stage.setInset(0, el.offsetHeight);
-  else stage.setInset(el.offsetWidth + 24, 0);
+  const leftSidebarW = 260;
+  if (!selectedId) {
+    return stage.setInset(-leftSidebarW * 0.7, 0);
+  }
+  if (el.classList.contains('expanded')) {
+    return stage.setInset(0, 0);
+  }
+  return stage.setInset((el.offsetWidth - leftSidebarW) * 0.8, 0);
 }
 
 function setStatus(id, status) {
