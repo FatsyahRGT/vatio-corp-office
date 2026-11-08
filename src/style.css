@@ -504,18 +504,86 @@ body.chatting #panel { transform: none; opacity: 1; pointer-events: auto; }
 }
 .q:hover { background: var(--item-hover); border-color: var(--accent); }
 
-.composer { position: relative; display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px 8px; border-top: 1px solid var(--line); background: var(--card-solid); }
+.composer {
+  position: relative;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+  padding: 10px 14px 8px !important;
+  border-top: 1px solid var(--line) !important;
+  background: var(--card-solid) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.attach-btn {
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: var(--ink-soft) !important;
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  cursor: pointer !important;
+  transition: all .15s ease !important;
+  margin-bottom: 1px !important;
+}
+.attach-btn:hover {
+  background: var(--item-hover) !important;
+  color: var(--accent-light) !important;
+  border-color: var(--accent) !important;
+}
+
 #input {
-  flex: 1; resize: none; max-height: 140px; border: 1px solid var(--input-border); border-radius: 14px; padding: 10px 14px;
-  font-size: 14px; line-height: 1.45; background: var(--input-bg); color: var(--ink); outline: none; transition: border-color .15s, background .15s;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  max-height: 150px !important;
+  padding: 9px 13px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--input-border) !important;
+  background: var(--input-bg) !important;
+  color: var(--ink) !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  resize: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: border-color .15s, background .15s !important;
 }
-#input:focus { border-color: var(--accent); background: var(--card-solid); }
+#input:focus {
+  border-color: var(--accent) !important;
+  background: var(--card-solid) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+}
+
 #btn-send {
-  flex: none; width: 42px; height: 42px; border-radius: 13px; border: 0; background: var(--accent); color: #fff; cursor: pointer; display: grid; place-items: center;
-  transition: transform .12s, opacity .15s;
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  border: 0 !important;
+  background: var(--accent) !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  display: grid !important;
+  place-items: center !important;
+  transition: transform .12s, opacity .15s, background .12s !important;
+  margin-bottom: 1px !important;
 }
-#btn-send:hover:not(:disabled) { transform: scale(1.05); }
-#btn-send:disabled { opacity: .45; cursor: default; }
+#btn-send:hover:not(:disabled) {
+  transform: scale(1.05) !important;
+  background: var(--accent-light) !important;
+}
+#btn-send:disabled {
+  opacity: .35 !important;
+  cursor: not-allowed !important;
+}
 .panel-foot { font-size: 11px; color: var(--ink-soft); text-align: center; padding: 0 14px calc(10px + var(--safe-b)); background: var(--card-solid); }
 
 /* ---------- Gate & loading ---------- */
@@ -538,21 +606,22 @@ body.chatting #panel { transform: none; opacity: 1; pointer-events: auto; }
 
 /* ---------- WhatsApp Web Style Fullscreen & Attachment Additions ---------- */
 #panel.expanded {
-  top: 14px;
-  bottom: 14px;
-  left: 14px;
-  right: 14px;
-  width: auto;
-  max-width: 1440px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  border-radius: 18px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  top: 14px !important;
+  bottom: 14px !important;
+  left: 14px !important;
+  right: 14px !important;
+  width: auto !important;
+  max-width: 1440px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: row !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55) !important;
+  transform: none !important;
 }
 
 .panel-main {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -564,15 +633,15 @@ body.chatting #panel { transform: none; opacity: 1; pointer-events: auto; }
 /* Sidebar WhatsApp Web */
 .panel-sidebar {
   display: none;
-  width: 320px;
-  flex: none;
+  width: 290px;
+  flex: 0 0 290px;
   background: var(--card-sidebar);
   border-right: 1px solid var(--line);
   flex-direction: column;
   overflow: hidden;
 }
 #panel.expanded .panel-sidebar {
-  display: flex;
+  display: flex !important;
 }
 .sidebar-head {
   padding: 14px 16px;
@@ -1395,40 +1464,23 @@ body.chatting #panel { transform: none; opacity: 1; pointer-events: auto; }
   }
   body.chatting #panel { transform: none; }
 
-  /* Expanded mode on mobile: full screen reflow with clean drawer toggle */
+  /* Expanded mode on small screens */
   #panel.expanded {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 100dvh;
-    border-radius: 0;
-    margin: 0;
-    box-shadow: none;
-    flex-direction: column;
+    top: 6px !important;
+    bottom: 6px !important;
+    left: 6px !important;
+    right: 6px !important;
+    width: auto !important;
+    height: calc(100dvh - 12px) !important;
+    border-radius: 16px !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
   }
-  
-  .mobile-back-btn {
-    display: grid;
-  }
-
-  #panel.expanded.mobile-show-sidebar .panel-sidebar {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    border-right: none;
-  }
-  #panel.expanded.mobile-show-sidebar .panel-main {
-    display: none;
-  }
-  #panel.expanded:not(.mobile-show-sidebar) .panel-sidebar {
-    display: none;
-  }
-  #panel.expanded:not(.mobile-show-sidebar) .panel-main {
-    display: flex;
-    width: 100%;
-    height: 100%;
+  #panel.expanded .panel-sidebar {
+    display: flex !important;
+    width: 240px !important;
+    flex: 0 0 240px !important;
   }
 
   .msg { max-width: 96%; }

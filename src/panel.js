@@ -81,7 +81,6 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
     sidebar: $('panel-sidebar'),
     agentSearch: $('agent-search'),
     clearSearch: $('btn-clear-search'),
-    backSidebar: $('btn-back-sidebar'),
     agentList: $('agent-list'),
     attachBtn: $('btn-attach'),
     fileInput: $('file-input'),
@@ -1121,14 +1120,6 @@ export function createPanel({ onSelect, onClose, onStatus, onNeedCode, isDemo })
 
   if (els.expand) {
     els.expand.addEventListener('click', () => toggleExpand());
-  }
-
-  if (els.backSidebar) {
-    els.backSidebar.addEventListener('click', () => {
-      if (els.panel) {
-        els.panel.classList.toggle('mobile-show-sidebar');
-      }
-    });
   }
 
   if (els.clearSearch) {
